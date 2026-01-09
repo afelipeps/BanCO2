@@ -46,32 +46,40 @@ const IndicatorRenderer: React.FC<IndicatorRendererProps> = ({ indicator }) => {
 
     return (
         <div className="flex flex-col gap-6 w-full">
-            {/* KPI Header */}
-            <div className="flex items-center justify-between bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">
-                        <Calculator size={32} />
-                    </div>
-                    <div>
-                        <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">Ratio SROI</div>
-                        <div className="text-4xl font-bold text-white tracking-tight flex items-baseline gap-2">
-                            2.22 <span className="text-lg text-emerald-400 font-normal">x</span>
-                        </div>
-                    </div>
+            {/* KPI Header - Centered & Scientific Layout */}
+            <div className="flex flex-col items-center justify-center bg-slate-800/50 p-6 rounded-lg border border-slate-700 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+                
+                <div className="mb-6 p-3 rounded-full bg-emerald-400/5 text-emerald-400 border border-emerald-400/20 shadow-[0_0_20px_rgba(52,211,153,0.1)]">
+                    <Calculator size={28} />
                 </div>
-                <div className="text-right">
-                    <div className="text-xs text-slate-500 font-medium uppercase mb-1">Valor Neto Social</div>
-                    <div className="text-2xl font-mono font-bold text-emerald-400">$3.926 MM</div>
+                
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 w-full z-10">
+                    <div className="flex flex-col items-center group">
+                         <div className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mb-2 group-hover:text-emerald-400 transition-colors">Ratio SROI</div>
+                         <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter flex items-baseline filter drop-shadow-lg">
+                             2.22 <span className="text-2xl text-emerald-500 font-light ml-2 opacity-80">x</span>
+                         </div>
+                    </div>
+                    
+                    {/* Scientific Divider */}
+                    <div className="hidden sm:block w-px h-16 bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
+                    
+                    <div className="flex flex-col items-center group">
+                        <div className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mb-2 group-hover:text-emerald-400 transition-colors">Valor Neto Social</div>
+                        <div className="text-3xl md:text-4xl font-mono font-bold text-emerald-400 tracking-tight filter drop-shadow-lg">$3.926 MM</div>
+                    </div>
                 </div>
             </div>
 
             {/* Comparison Chart */}
-            <div className="h-40 w-full relative">
+            <div className="h-64 lg:h-48 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart layout="vertical" data={data} margin={{ top: 0, right: 60, left: 20, bottom: 0 }} barSize={35}>
+                    <BarChart layout="vertical" data={data} margin={{ top: 0, right: 60, left: 10, bottom: 0 }} barSize={35}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
                         <XAxis type="number" hide />
-                        <YAxis dataKey="name" type="category" width={100} stroke="#94a3b8" tick={{fontSize: 11, fontWeight: 'bold'}} />
+                        {/* Adjusted YAxis width for responsiveness */}
+                        <YAxis dataKey="name" type="category" width={85} stroke="#94a3b8" tick={{fontSize: 10, fontWeight: 'bold'}} />
                         <Tooltip 
                             cursor={{fill: 'transparent'}}
                             content={({ active, payload }) => {
@@ -345,8 +353,8 @@ const IndicatorRenderer: React.FC<IndicatorRendererProps> = ({ indicator }) => {
   }
 
   if (type.startsWith('chart')) {
-    // Aumentar altura para gráficos de correlación para mejorar proporción visual (cuadrado)
-    const containerHeight = type === 'chart_correlation' ? 'h-80' : 'h-48';
+    // Aumentar altura para gráficos de correlación y ajustar altura base para tablets (1 columna)
+    const containerHeight = type === 'chart_correlation' ? 'h-80' : 'h-64 lg:h-56';
 
     return (
       <div className={`${containerHeight} w-full mt-2`}>
