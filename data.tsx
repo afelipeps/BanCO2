@@ -797,7 +797,7 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
         data: [
             { 
                 name: 'Inversión (Inputs)', 
-                totalFormatted: '1.76B',
+                totalFormatted: '1.766 MM',
                 total: 1765929034,
                 Masbosques: 1389456598, 
                 Municipios: 347972436, // San Rafael + Granada + Guatape
@@ -805,7 +805,7 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
             },
             { 
                 name: 'Impacto (Outcomes)', 
-                totalFormatted: '3.92B',
+                totalFormatted: '3.926 MM',
                 total: 3926103128,
                 Familias: 948200400, // PSA + Emprendimiento
                 Medioambiente: 1851776000, 

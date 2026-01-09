@@ -54,20 +54,23 @@ const IndicatorRenderer: React.FC<IndicatorRendererProps> = ({ indicator }) => {
                     <Calculator size={28} />
                 </div>
                 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 w-full z-10">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-24 w-full z-10">
                     <div className="flex flex-col items-center group">
                          <div className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mb-2 group-hover:text-emerald-400 transition-colors">Ratio SROI</div>
-                         <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter flex items-baseline filter drop-shadow-lg">
+                         <div className="text-5xl lg:text-6xl font-bold text-white tracking-tighter flex items-baseline filter drop-shadow-lg">
                              2.22 <span className="text-2xl text-emerald-500 font-light ml-2 opacity-80">x</span>
                          </div>
                     </div>
                     
-                    {/* Scientific Divider */}
-                    <div className="hidden sm:block w-px h-16 bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
+                    {/* Scientific Divider - Vertical for Desktop/Tablet */}
+                    <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
+                    
+                    {/* Horizontal Divider for Mobile - Visible below MD */}
+                    <div className="md:hidden w-16 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent my-2"></div>
                     
                     <div className="flex flex-col items-center group">
                         <div className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mb-2 group-hover:text-emerald-400 transition-colors">Valor Neto Social</div>
-                        <div className="text-3xl md:text-4xl font-mono font-bold text-emerald-400 tracking-tight filter drop-shadow-lg">$3.926 MM</div>
+                        <div className="text-3xl lg:text-4xl font-mono font-bold text-emerald-400 tracking-tight filter drop-shadow-lg">$3.926 MM</div>
                     </div>
                 </div>
             </div>
@@ -75,17 +78,28 @@ const IndicatorRenderer: React.FC<IndicatorRendererProps> = ({ indicator }) => {
             {/* Comparison Chart */}
             <div className="h-64 lg:h-48 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart layout="vertical" data={data} margin={{ top: 0, right: 60, left: 10, bottom: 0 }} barSize={35}>
+                    {/* MARGEN DERECHO AMPLIADO A 110px PARA EVITAR COLISIÓN CON ETIQUETAS */}
+                    <BarChart layout="vertical" data={data} margin={{ top: 0, right: 110, left: 0, bottom: 0 }} barSize={36}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
                         <XAxis type="number" hide />
-                        {/* Adjusted YAxis width for responsiveness */}
-                        <YAxis dataKey="name" type="category" width={85} stroke="#94a3b8" tick={{fontSize: 10, fontWeight: 'bold'}} />
+                        
+                        {/* YAxis: Width suficiente para textos, sin líneas visuales para limpieza */}
+                        <YAxis 
+                          dataKey="name" 
+                          type="category" 
+                          width={100} 
+                          stroke="#94a3b8" 
+                          tick={{fontSize: 10, fontWeight: 'bold', fill: '#94a3b8'}} 
+                          axisLine={false}
+                          tickLine={false}
+                        />
+
                         <Tooltip 
                             cursor={{fill: 'transparent'}}
                             content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                 return (
-                                    <div className="bg-slate-900 border border-slate-700 p-3 rounded shadow-xl min-w-[180px]">
+                                    <div className="bg-slate-900 border border-slate-700 p-3 rounded shadow-xl min-w-[180px] z-50 relative">
                                         <p className="text-white font-bold text-xs mb-2 pb-1 border-b border-slate-700">{payload[0].payload.name}</p>
                                         {payload.map((entry, index) => (
                                             <div key={index} className="flex items-center justify-between gap-4 text-xs mb-1">
@@ -115,10 +129,15 @@ const IndicatorRenderer: React.FC<IndicatorRendererProps> = ({ indicator }) => {
                         ))}
                     </BarChart>
                 </ResponsiveContainer>
-                {/* Labels de Total al final de las barras */}
-                <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-around py-4 pointer-events-none">
+                
+                {/* Labels de Total superpuestas pero alineadas en el margen derecho reservado */}
+                <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-around py-4 pointer-events-none w-[110px] pr-2">
                      {data.map((d: any, i: number) => (
-                         <span key={i} className="text-xs font-bold text-slate-400 bg-slate-900/80 border border-slate-700 px-2 py-0.5 rounded shadow-sm">${(d.total / 1000000000).toFixed(2)}B</span>
+                         <div key={i} className="flex justify-end items-center">
+                             <span className="text-[11px] font-bold text-slate-300 bg-slate-900/90 border border-slate-700 px-2 py-1 rounded shadow-sm whitespace-nowrap backdrop-blur-sm">
+                                 ${(d.total / 1000000).toLocaleString('es-CO', {maximumFractionDigits: 0})} MM
+                             </span>
+                         </div>
                      ))}
                 </div>
             </div>
