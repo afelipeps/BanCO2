@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Map, Users, Leaf, Heart, DollarSign, 
   Scale, Infinity as InfinityIcon, Menu, Calculator, X
@@ -12,6 +12,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('geografia');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile/tablet screen to auto-collapse sidebar
   // Adjusted threshold to 1024px (lg) to treat tablets as mobile-like for sidebar behavior
@@ -30,6 +31,13 @@ export default function App() {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // Reset scroll position when activeTab changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
 
   const menuItems = [
     { id: 'geografia', label: '1. Geografía', icon: Map },
@@ -157,7 +165,10 @@ export default function App() {
         </header>
 
         {/* Scrollable Content - Grid System */}
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-8 z-10 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+        <div 
+          ref={scrollContainerRef}
+          className="flex-1 overflow-y-auto px-4 md:px-8 py-8 z-10 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent"
+        >
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-20">
             {currentCategory.indicators.map((indicator: Indicator, index: number) => (
               <div 
