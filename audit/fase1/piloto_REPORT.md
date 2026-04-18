@@ -15,7 +15,7 @@ Los 5 indicadores de Población reconcilian dentro de la tolerancia `ok` contra 
 | Hombres | 58,80% | 58,75% (47/80) | [47,80; 68,89%] | 80 | ok |
 | Mujeres | 41,20% | 41,25% (33/80) | [31,11; 52,20%] | 80 | ok |
 
-Diferencia de 0,05 pp viene de que el código redondea a 1 decimal; las anclas están a 2 decimales. **Viz viola regla**: `<visual_rules>` prohíbe "pie de 2 categorías" — reemplazar por barra con Wilson CI en Fase 3.
+Diferencia de 0,05 pp viene de que el código redondea a 1 decimal; las anclas están a 2 decimales. **Viz viola regla**: `<visual_rules>` prohíbe "pie de 2 categorías" — reemplazar por barra con Wilson CI en Fase 4 (migración visual).
 
 ### P2 — Jefatura de Hogar por Sexo · `chart_bar_stacked`
 
@@ -39,7 +39,7 @@ Marginal por bin (los 5 coinciden al pp con el código):
 | 61-75  | 35,00% | 35,00% (28/80) | 80 | [25,50; 45,88%] |
 | >75    | 13,75% | 13,75% (11/80) | 80 | [7,87; 22,93%] |
 
-**Hallazgo `notas_bins`:** los 5 bins del código reproducen exactamente los conteos de la columna derivada `Rango_Edad` del xlsx: `{18-30: 4, 31-45: 14, 46-60: 23, 61-75: 28, >75: 11}`. El label `<18-30` del código es sintácticamente ambiguo pero numéricamente correcto (incluye los 3 casos con edad 15-17 + todos los de 18-30). **Viz viola regla**: `<visual_rules>` exige "pirámide real con eje simétrico por sexo". Cruce por sexo calculado y exportado (10 filas extras en Resumen) listo para la migración a ECharts de Fase 3. Ver [questions/001](../../questions/001_piramide_ejes_simetricos.md) y [questions/003](../../questions/003_rangos_etarios_p3.md).
+**Hallazgo `notas_bins`:** los 5 bins del código reproducen exactamente los conteos de la columna derivada `Rango_Edad` del xlsx: `{18-30: 4, 31-45: 14, 46-60: 23, 61-75: 28, >75: 11}`. El bin etiquetado "18-30" en el xlsx contiene edades `{15, 23, 24, 25}` — es decir, **1 caso con edad 15** + 3 casos de 23-25. El label `<18-30` del código y el label `18-30` del xlsx son ambos sintácticamente inconsistentes con los datos, pero los conteos son correctos; la solución es un rename a `15-30` sin recategorización (ver [questions/003](../../questions/003_rangos_etarios_p3.md) con verificación empírica). **Viz viola regla**: `<visual_rules>` exige "pirámide real con eje simétrico por sexo". Cruce por sexo calculado y exportado (10 filas extras en Resumen) listo para la migración a ECharts de Fase 4. Ver también [questions/001](../../questions/001_piramide_ejes_simetricos.md).
 
 ### P4 — Edad Promedio · `kpi_card`
 
@@ -56,7 +56,7 @@ Reconciliación aritmética de la media es perfecta (diff 0,0125 años). El hand
 |---|---|---|---|---|---|
 | Global | 87,50% | 87,50% (70/80) | [78,47; 93,07%] | 80 | ok |
 
-Viz aceptable (KPI para proporción). Recomendación: añadir IC95 como subtítulo del KPI en Fase 3 para cumplir la expectativa general de reportar incertidumbre.
+Viz aceptable (KPI para proporción). Recomendación: añadir IC95 como subtítulo del KPI en Fase 4 (migración visual) para cumplir la expectativa general de reportar incertidumbre.
 
 ## Reconciliación contra `<anchors>`
 
@@ -115,11 +115,11 @@ Sub-agentes pueden correr en paralelo — la conexión DuckDB cacheada es `@lru_
 - **`Pagos` n=141 ≠ ancla 148**: no bloquea Población pero queda flag para el auditor de Económica/Sostenibilidad — investigar si son celdas vacías post-lectura o si la fuente cambió desde que se fijó el ancla.
 - **Typo en exploración de Fase 1**: la columna derivada `Cohorte_1` (no `Cohorte`) — corregido en el texto del plan. Anotar para no replicar en sub-agentes.
 
-## Dudas abiertas
+## Questions: estado final
 
-- [questions/001_piramide_ejes_simetricos.md](../../questions/001_piramide_ejes_simetricos.md) — P3: reemplazo de `chart_bar_vertical` por pirámide ECharts con ejes simétricos. Recomendación A.
-- [questions/002_kpi_edad_media_vs_mediana.md](../../questions/002_kpi_edad_media_vs_mediana.md) — P4: reemplazo de KPI media por mediana 60 + IQR + IC bootstrap. **Afecta narrativa protegida** "Estancamiento Demográfico". Recomendación A.
-- [questions/003_rangos_etarios_p3.md](../../questions/003_rangos_etarios_p3.md) — P3: normalizar label ambiguo `<18-30` a `15-30` o `18-30`. Recomendación A.
+- [questions/001_piramide_ejes_simetricos.md](../../questions/001_piramide_ejes_simetricos.md) — **Resuelta Opción A** (Andrés, 2026-04-18). P3 migra a pirámide ECharts con ejes simétricos en Fase 4.
+- [questions/002_kpi_edad_media_vs_mediana.md](../../questions/002_kpi_edad_media_vs_mediana.md) — **Resuelta tentativa Opción A con ajuste narrativo** (Andrés, 2026-04-18). KPI principal = mediana 60 + IQR + IC95 bootstrap; la media 57,8 se cita en el texto narrativo como información complementaria (2,2 años de diferencia = cola joven). **PENDIENTE antes de Fase 4**: validar contra `docs/tesis.docx` que la narrativa "Estancamiento Demográfico" no depende metodológicamente del uso de media.
+- [questions/003_rangos_etarios_p3.md](../../questions/003_rangos_etarios_p3.md) — **Resuelta Opción A** (Andrés, 2026-04-18). Bins cerrados `[15-30]/[31-45]/[46-60]/[61-75]/[>75]`. Verificación empírica confirmó que es sólo un rename de labels, sin recategorización (el bin xlsx ya contiene el caso de 15 años).
 
 ## Decisión: ¿escalar a las 6 secciones restantes?
 
@@ -127,11 +127,11 @@ Sub-agentes pueden correr en paralelo — la conexión DuckDB cacheada es `@lru_
 
 - [x] `common.py` es genérico: ninguna referencia hard-coded a "Población" fuera del ejemplo de uso. Las 6 secciones pueden reutilizar 100% de las utilidades.
 - [x] Schema `IndicadorResultado` soportó los 4 tipos de estadístico (proporción, mediana, media, conteo) + un caso especial (diff_props) sin cambios.
-- [x] Las 3 questions preemptivas quedaron escritas con opciones A/B/C y recomendación.
+- [x] Las 3 questions preemptivas tienen decisión humana (2 firmes, 1 tentativa con pendiente tesis).
 - [x] Reconciliación de anclas dentro del umbral ok (7/7).
 - [x] xlsx producido correctamente (14 KB, 3 hojas, 23/19/5 filas).
 
 Sugerencia para el lanzamiento paralelo: un sub-agente por sección con prompt que incluya
 (1) lista de indicadores en `data.tsx`, (2) variables fuente en `Diccionario_Datos`, (3) anclas relevantes de `<anchors>`, (4) imports de `common.py`, (5) contrato de severidad y handoff. El piloto deja como referencia activa `population_audit.py` y este REPORT.
 
-**El commit de cierre del piloto** (`chore(audit-p1): close pilot and mark ready to scale`) queda pendiente hasta que el humano valide este documento.
+El lanzamiento de Tiempo 2 (paralelización) espera autorización explícita de Andrés después de revisar este documento.

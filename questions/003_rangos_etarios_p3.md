@@ -1,6 +1,6 @@
 # 003 — Rangos etarios P3: bins del código vs bins del xlsx
 
-**Estado:** abierta · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P3 en `data.tsx:152-168` + columna derivada `Rango_Edad` en `Datos_Normalizados`.
+**Estado:** **resuelta — Opción A** (Andrés, 2026-04-18) · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P3 en `data.tsx:152-168` + columna derivada `Rango_Edad` en `Datos_Normalizados`.
 
 ## Contexto
 
@@ -47,11 +47,50 @@ La Fase 3 renderiza la pirámide con los bins del código y el report indica a p
 
 **Opción A** después de verificar con el auditor de P3 cuántos casos caen en el bin más bajo y si `Rango_Edad` usa `18-30` o `15-30`. Si el xlsx ya trae `18-30` y no hay ningún caso <18 (coherente con que el programa sea para titulares de predio, adultos), la reclassificación es trivial.
 
-## Tarea para el piloto
+## Verificación empírica (piloto)
 
-`population_audit.py` debe reportar:
-1. Tabla de frecuencias por bin del código (aplicados al continuo `1.7_Edad`).
-2. Tabla de frecuencias por bin del xlsx (`Rango_Edad` tal como viene).
-3. Diferencia fila a fila si los sets de bins no coinciden exactamente.
+Query ejecutada sobre `Datos_Normalizados` el 2026-04-18:
 
-Esto sirve de evidencia para cerrar la decisión A/B/C en Fase 3.
+```sql
+SELECT DISTINCT "Rango_Edad" r FROM datos ORDER BY r;
+```
+
+Valores únicos literales en el xlsx:
+
+```
+'18-30'
+'31-45'
+'46-60'
+'61-75'
+'>75'
+```
+
+Conteos por bin:
+
+| Rango_Edad (xlsx) | n |
+|---|---|
+| 18-30 | 4 |
+| 31-45 | 14 |
+| 46-60 | 23 |
+| 61-75 | 28 |
+| >75 | 11 |
+
+**Importante**: el bin etiquetado `18-30` en el xlsx incluye casos con edad `{15, 23, 24, 25}` — es decir, **el label xlsx también es incorrecto** (hay un beneficiario de 15 años clasificado como "18-30"). El rango real del bin es `[15, 30]`. El código (`<18-30`) y el xlsx (`18-30`) tienen ambos labels inconsistentes con los datos, pero los conteos numéricos son correctos.
+
+## Decisión (Andrés, 2026-04-18)
+
+**Opción A aprobada** con bins cerrados `[15-30]/[31-45]/[46-60]/[61-75]/[>75]`.
+
+**Implementación en Fase 4 es sólo un rename de labels** — los bins numéricos del xlsx ya incluyen correctamente los casos de 15-17 años en el primer bin. No requiere recategorización de casos ni cambios en `Rango_Edad`. Los cambios necesarios son:
+
+1. `data.tsx:158-162`: reemplazar `'<18-30'` por `'15-30'` como label del primer bin.
+2. Si algún componente downstream lee `Rango_Edad` directo (por ej. un auditor futuro de sección ambiental cruzando edad con algo), considerar si también renombrar el literal en el xlsx. Fuera de alcance del P3.
+
+## Tarea para el piloto (cerrada)
+
+`population_audit.py` reportó:
+1. Tabla de frecuencias por bin del código. ✓
+2. Tabla de frecuencias por bin del xlsx (`Rango_Edad`). ✓
+3. Verificación de coincidencia: mismos conteos 4/14/23/28/11 entre código y xlsx. ✓
+
+Evidencia recogida en hoja `Método` del `piloto_poblacion.xlsx` y en `piloto_REPORT.md` (sección P3).

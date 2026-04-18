@@ -1,6 +1,6 @@
 # 001 — Pirámide poblacional con ejes simétricos (P3)
 
-**Estado:** abierta · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P3 en `data.tsx:152-168`.
+**Estado:** **resuelta — Opción A** (Andrés, 2026-04-18) · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P3 en `data.tsx:152-168`.
 
 ## Contexto
 
@@ -51,12 +51,12 @@ Mantener recharts, componer dos `<BarChart>` horizontales lado a lado (uno miran
 Dejar `chart_bar_vertical` y documentar la violación en el report.
 
 **Pros:** cero cambio.
-**Contras:** viola `visual_rules` explícitamente. Fase 3 deja deuda técnica visible.
+**Contras:** viola `visual_rules` explícitamente. Deja deuda técnica visible hasta Fase 4.
 
 ## Recomendación tentativa
 
 **Opción A.** La regla es textual y explícita; ECharts está autorizado en `CLAUDE.md`; el costo de bundle se amortiza si otros indicadores migran (boxplots de ingreso, heatmaps Likert). Además: la pirámide real habilita leer "estancamiento demográfico" y "doble carga femenina" en una sola viz, densidad narrativa alta.
 
-## No ejecutar ahora
+## Decisión
 
-Fase 1 es diagnóstico. La implementación es Fase 3.
+**Opción A aprobada** por Andrés el 2026-04-18. Se implementa en Fase 4 (migración visual), no en Fase 3 (decisiones de stack). La Fase 1 es diagnóstico; la Fase 3 sólo decide tecnología y la Fase 4 ejecuta la migración.

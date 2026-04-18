@@ -1,6 +1,6 @@
 # 002 — KPI Edad Promedio: media vs mediana (P4)
 
-**Estado:** abierta · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P4 en `data.tsx:169-181` + narrativa protegida "Estancamiento Demográfico".
+**Estado:** **resuelta tentativa — Opción A con ajuste narrativo** (Andrés, 2026-04-18). **PENDIENTE**: validación contra `docs/tesis.docx` antes de ejecutar Fase 4 (ver sección "Pendiente antes de Fase 4" al final). · **Contexto:** auditoría Fase 1 piloto Población · **Afecta:** indicador P4 en `data.tsx:169-181` + narrativa protegida "Estancamiento Demográfico".
 
 ## Contexto
 
@@ -59,8 +59,19 @@ Eliminar el KPI card. Reemplazar con boxplot + histograma como componente princi
 
 **Opción A.** La regla `<visual_rules>` es negativa y explícita ("nunca media en KPI card"); la media en el KPI no es literalmente incorrecta pero sí metodológicamente inferior para n=80 con skew etario. La narrativa protegida habla de "envejecimiento"; el punto narrativo se conserva o mejora con mediana 60. Conviene reescribir el párrafo de "Estancamiento Demográfico" para usar mediana como cifra principal y referir la media en el texto, no en el KPI.
 
+## Decisión (Andrés, 2026-04-18)
+
+**Opción A con ajuste narrativo explícito.** Implementación:
+
+- **KPI principal**: mediana `60 años` · subtítulo `IQR [46, 67] · IC95 bootstrap [55, 63]`.
+- **Texto narrativo del indicador P4**: mencionar la media 57,8 como **información complementaria que refleja la presencia de una cola joven** en la distribución. La diferencia entre media (57,8) y mediana (60) son 2,2 años — interpretable como "hay suficientes beneficiarios jóvenes como para tirar la media hacia abajo, aunque la masa está concentrada en 46-75". Esto preserva literalidad del número del ancla sin violar `visual_rules`.
+
+## Pendiente antes de Fase 4
+
+**Validar contra `docs/tesis.docx`** que la narrativa "Estancamiento Demográfico" no depende metodológicamente de que la cifra central sea media. Si la tesis justifica específicamente el uso de media (p. ej. citando literatura actuarial sobre "edad media del relevo generacional" como indicador estándar), **reabrir esta question** antes de ejecutar Fase 4. Si la tesis sólo cita la media descriptivamente, Opción A queda firme.
+
+La verificación la hará el humano (o el auditor de la sección que audite la tesis, si se planifica uno).
+
 ## Ejecución del piloto
 
-El script calcula **ambos** (mediana + IQR + IC95 bootstrap, y media + sd) y los reporta en dos filas separadas del `Resumen`. Así no se bloquea el piloto; la decisión A/B/C se aplica en Fase 3.
-
-Si `waiting_human_review` y no hay respuesta en 1 día → continuar con A como tentativa en el report.
+El script calculó **ambos** (mediana + IQR + IC95 bootstrap, y media + sd) y los reporta en dos filas separadas del `Resumen`. Esto preserva opcionalidad sin bloquear el piloto; la decisión se aplica en Fase 4 (migración visual), no en Fase 3 (decisión de stack).
