@@ -1,0 +1,13 @@
+filas_resumen=22 indicadores=6
+  G1: {'ok': 4, 'nota': 2, 'handoff': 0, 'bloqueo': 0}
+  G2: {'ok': 1, 'nota': 1, 'handoff': 1, 'bloqueo': 0}
+  G3: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  G4: {'ok': 4, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  G5: {'ok': 3, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  G6: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas (|valor_real - ancla|):
+  G2/area_conservacion_media_ha vs territorial.area_por_familia_ha (104.6): ok
+  G6/veredas_distintas vs poblacion.muestra.veredas (52.0): ok
+
+xlsx escrito: audit\fase1\territorial.xlsx
