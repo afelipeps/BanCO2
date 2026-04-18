@@ -73,6 +73,14 @@ ANCHORS: dict[str, float] = {
     "poblacion.universo_familias": 155.0,
     "poblacion.muestra.area_ha": 22512.0,
     "poblacion.muestra.veredas": 52.0,
+    # Pagos (resuelto en questions/004; el "148" del <sources> previo era max_row del xlsx)
+    "pagos.n_total": 141.0,
+    "pagos.familia_campesina": 134.0,
+    "pagos.institucion_otro": 7.0,
+    "pagos.familia_campesina.hombres": 97.0,
+    "pagos.familia_campesina.mujeres": 37.0,
+    "economica.psa_mensual.mediana_hombres": 215688.0,  # ancla tesis (n=134)
+    "economica.psa_mensual.mediana_mujeres": 277312.0,  # ancla tesis (n=134)
 }
 
 # Umbrales de severidad (pp = puntos porcentuales; para continuas interpretar
@@ -407,9 +415,8 @@ if __name__ == "__main__":
     con = get_connection()
     n = con.execute("SELECT COUNT(*) FROM datos").fetchone()[0]
     assert n == 80, f"n datos={n}, esperado 80"
-    # Informativo: n pagos (ancla CLAUDE.md dice 148; cualquier divergencia se
-    # audita en la sección Económica/Sostenibilidad, no bloquea el piloto).
+    # Pagos: n=141 datos reales (ancla <sources> corregida en questions/004).
     n_pagos = con.execute("SELECT COUNT(*) FROM pagos").fetchone()[0]
-    print(f"pagos n={n_pagos} (ancla CLAUDE.md=148)")
+    assert n_pagos == 141, f"n pagos={n_pagos}, esperado 141 (ver questions/004)"
 
     print("common.py SMOKE OK")

@@ -33,7 +33,7 @@ Paths locales:
 <sources>
 Jerarquía: microdatos > tesis > código.
 1. Microdatos — data_source/BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx (9 hojas, gitignored).
-   Hoja Datos_Normalizados: n=80, 79 variables. Hoja Pagos: n=148, PSA 2022–2023.
+   Hoja Datos_Normalizados: n=80, 79 variables. Hoja Pagos: 141 socios con pagos PSA 2022–2023 (134 Familia Campesina + 7 Institución/Otro). La hoja contiene además 3 filas de summary embebido (rows 146-148 del xlsx) que NO son datos; anclas PSA de <anchors> aplican a n=134 (subgrupo Familia Campesina), no a los 141.
 2. Tesis — docs/tesis.docx (gitignored). Autoridad en SROI, Teoría del Cambio, interpretaciones.
 3. Código — hipótesis a verificar, nunca verdad.
 Si microdatos y tesis divergen: escribir questions/NNN_divergencia.md, no corregir en silencio.
@@ -52,6 +52,7 @@ Cifras verificadas contra microdatos. Intocables salvo evidencia nueva:
 - Mejora ambiental percibida: 97,5% en todos los ejes
 - Brecha género mercado: 8,5:1 (mediana H $850k vs M $100k, n=24)
 - Mediana PSA mensualizado: mujeres $277.312 > hombres $215.688 (n=134)
+- Pagos: 141 socios total (134 Familia Campesina + 7 Institución). Subgrupo canónico para mediana PSA: Familia Campesina n=134 (H=97, M=37).
 </anchors>
 
 <narratives>
