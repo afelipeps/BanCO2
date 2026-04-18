@@ -1,0 +1,17 @@
+filas_resumen=23 indicadores=5
+  P1: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  P2: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  P3: {'ok': 15, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  P4: {'ok': 1, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  P5: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas (|valor_real - ancla|):
+  P1/Hombres vs poblacion.genero.hombres_prop (0.5875): ok
+  P1/Mujeres vs poblacion.genero.mujeres_prop (0.4125): ok
+  P2/Mujeres jefas vs poblacion.jefatura.mujeres_prop (0.7879): ok
+  P2/Hombres jefes vs poblacion.jefatura.hombres_prop (0.9362): ok
+  P4/mediana vs poblacion.edad.mediana (60.0): ok
+  P4/media vs poblacion.edad.media (57.81): ok
+  P5/global vs poblacion.jefatura.global_prop (0.875): ok
+
+xlsx escrito: audit\fase1\piloto_poblacion.xlsx

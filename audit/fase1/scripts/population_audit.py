@@ -452,8 +452,8 @@ def main() -> int:
     for ind, buckets in sorted(sev_summary.items()):
         print(f"  {ind}: {buckets}")
 
-    # Reconciliación de anclas
-    print("\nReconciliación de anclas (|valor_real − ancla|):")
+    # Reconciliacion de anclas (ASCII-safe para stdout cp1252 en Windows)
+    print("\nReconciliacion de anclas (|valor_real - ancla|):")
     for r in resultados:
         if r.ancla_ref and r.ancla_ref in ANCHORS:
             diff = abs(r.valor_real - ANCHORS[r.ancla_ref])
