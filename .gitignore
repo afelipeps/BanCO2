@@ -1,0 +1,28 @@
+# Dependencias y build
+node_modules/
+dist/
+
+# Insumos originales (read-only)
+Insumos/
+
+# Microdatos y tesis (copias de trabajo)
+data_source/
+docs/tesis.docx
+
+# Claude Code local
+.claude/settings.local.json
+
+# Notas y respuestas privadas
+notes/
+questions/*.respuesta.md
+
+# Auditoría: screenshots
+audit/**/*.png
+
+# Benchmarks: artefactos de build
+benchmarks/viz/node_modules/
+benchmarks/viz/dist/
+
+# Windows
+Thumbs.db
+Desktop.ini
