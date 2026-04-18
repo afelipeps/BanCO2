@@ -2,6 +2,11 @@
 node_modules/
 dist/
 
+# Python venv (stack de auditoría)
+.venv/
+__pycache__/
+*.pyc
+
 # Insumos originales (read-only)
 Insumos/
 
@@ -16,8 +21,9 @@ docs/tesis.docx
 notes/
 questions/*.respuesta.md
 
-# Auditoría: screenshots
+# Auditoría: screenshots y outputs crudos
 audit/**/*.png
+audit/**/raw/
 
 # Benchmarks: artefactos de build
 benchmarks/viz/node_modules/
