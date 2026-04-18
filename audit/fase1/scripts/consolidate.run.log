@@ -1,0 +1,29 @@
+Consolidado escrito: audit\fase1\auditoria_estadistica.xlsx
+
+=== INDICE ===
+    seccion  n_indicadores  n_filas_resumen  n_criticos  ok  nota  handoff  bloqueo  viola_viz_rules
+  poblacion              5               23          19  22     0        1        0               19
+territorial              6               22           8  16     3        3        0                7
+  ambiental              6               31           4  24     3        4        0                2
+     social             10               29          14  19     2        5        3                7
+ gobernanza              8               19          14  15     2        2        0               14
+
+=== TOTALES ===
+  n_indicadores_total = 35
+  n_filas_resumen_total = 124
+  ok total = 96
+  nota total = 10
+  handoff total = 15
+  bloqueo total = 3
+  viola_viz_rules total = 49
+
+=== QUESTIONS (total 9) ===
+  001_piramide_ejes_simetricos.md
+  002_kpi_edad_media_vs_mediana.md
+  003_rangos_etarios_p3.md
+  004_pagos_n_141_vs_148.md
+  005_g2_scatter_sintetico.md
+  006_g4_labels_fase_d.md
+  007_g5_mapping_pisos_termicos.md
+  008_s1_desacople_incentivo_bloqueos.md
+  009_ancla_continuaria_sin_pago.md
