@@ -23,6 +23,17 @@ valida el ancla 47/80 = 58.75% contra Wilson CI.
 
 from __future__ import annotations
 
+import sys
+
+# Forzar utf-8 en stdout/stderr cuando el host es Windows para no depender de
+# PYTHONIOENCODING en el entorno de los sub-agentes. Esto evita que prints con
+# caracteres como '−', '×', '≤' en nombres de variables o mensajes de log
+# aborten el script con UnicodeEncodeError bajo cp1252. Debe ir antes de
+# cualquier otro I/O del módulo o de scripts que lo importen.
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+
 import re
 from dataclasses import asdict, dataclass, field
 from functools import lru_cache
