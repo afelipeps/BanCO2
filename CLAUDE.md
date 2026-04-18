@@ -100,11 +100,12 @@ Prohibido: Inter/Roboto/Arial como única fuente, gradientes púrpura, layouts c
 </code_rules>
 
 <workflow>
-Comandos del proyecto (completar después de leer package.json):
-- Dev server: [completar desde package.json]
-- Build: [completar desde package.json]
-- Lint: [completar desde package.json]
-- Typecheck: [completar desde package.json]
+Comandos del proyecto:
+- Dev server: `npm run dev` (vite)
+- Build: `npm run build` (vite build)
+- Preview build: `npm run preview` (vite preview)
+- Lint: no configurado
+- Typecheck: no configurado (proyecto usa TS 5.8; ejecutar `npx tsc --noEmit` ad hoc)
 
 Git:
 - Rama activa: refactor/v2
