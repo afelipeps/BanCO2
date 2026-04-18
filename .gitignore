@@ -24,6 +24,7 @@ questions/*.respuesta.md
 # Auditoría: screenshots y outputs crudos
 audit/**/*.png
 audit/**/raw/
+audit/fase1/*.xlsx
 
 # Benchmarks: artefactos de build
 benchmarks/viz/node_modules/
