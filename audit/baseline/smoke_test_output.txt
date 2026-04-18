@@ -1,0 +1,6 @@
+Microdatos n = 80 (Datos_Normalizados)
+Wilson CI 95% para 47/80 (58.75%): [0.4780, 0.6889] ancho=0.2109
+Spearman sanity: rho=1.000 p=0.0000
+OLS sanity: slope=2.000000
+pandas.read_excel: 80 filas, 79 columnas
+SMOKE OK
