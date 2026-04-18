@@ -117,6 +117,12 @@ Verificación (tip Boris Cherny):
 - Después de cada cambio visual: npm run dev → abrir localhost en preview pane → validar
 - Antes de cada commit grande: /ultrareview
 - Al retomar sesión larga: leer notas/ para contexto
+
+Comparabilidad de métricas:
+- Solo prod vs prod es válido para comparar rendimiento post-refactor.
+- No comparar contra `npm run dev`: Vite dev está 3–10× más lento por falta de minify, tree-shake y compresión.
+- Para medir post-refactor: usar el deploy preview de Vercel o `npm run preview` (build production servido local).
+- Mínimo 3 corridas de Lighthouse por combinación URL×viewport; reportar mediana, no corrida única.
 </workflow>
 
 <handoff_protocol>
