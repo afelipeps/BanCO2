@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**/*)",
+      "Write(src/**/*)", "Write(audit/**/*)", "Write(copys/**/*)",
+      "Write(brand/**/*)", "Write(questions/**/*)", "Write(notes/**/*)",
+      "Write(benchmarks/**/*)", "Write(docs/**/*)",
+      "Edit(src/**/*)", "Edit(audit/**/*)", "Edit(CLAUDE.md)",
+      "Edit(.claude/**/*)", "Edit(package.json)", "Edit(.gitignore)",
+      "Bash(git *)", "Bash(gh *)", "Bash(npm *)", "Bash(npx *)",
+      "Bash(node *)", "Bash(python *)", "Bash(python3 *)", "Bash(pip *)",
+      "Bash(ls *)", "Bash(dir *)", "Bash(cat *)", "Bash(type *)",
+      "Bash(grep *)", "Bash(find *)", "Bash(mkdir *)", "Bash(cp *)",
+      "Bash(copy *)", "Bash(mv *)", "Bash(move *)",
+      "Bash(powershell *)", "Bash(pwsh *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)", "Bash(git push * main*)",
+      "Bash(git push * master*)", "Bash(rm -rf /*)", "Bash(sudo *)",
+      "Write(data_source/**/*)", "Write(Insumos/**/*)",
+      "Edit(data_source/**/*)", "Edit(Insumos/**/*)"
+    ]
+  }
+}
