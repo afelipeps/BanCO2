@@ -1,10 +1,15 @@
 # Fase 1 — Auditoría sección Social
 
-**Estado:** ejecutado con **3 bloqueos pendientes**, requiere input humano · **Rama:** `refactor/v2` · **Sección:** Social (id `SOC`, 9 indicadores S1–S9 + validación transversal, data.tsx líneas 294-435) · **Fecha run:** 2026-04-18
+**Estado:** ejecutado, **questions/008 y questions/009 resueltas** (Andrés 2026-04-18). Pendiente re-ejecución del script para materializar cambios en xlsx. · **Rama:** `refactor/v2` · **Sección:** Social (id `SOC`, 9 indicadores S1–S9 + validación transversal, data.tsx líneas 294-435) · **Última actualización:** 2026-04-18 post-resolución.
 
 ## Resumen ejecutivo
 
-Social produjo el output más alarmante del Tiempo 2: **3 bloqueos concentrados en S1 "Desacople del Incentivo"** con discrepancias de 8,73 a 22,85 pp vs microdatos — magnitudes que sólo pueden explicarse por (a) fuente de datos distinta a `Datos_Normalizados` (p.ej. `Pagos` cohortado por FASE), (b) cohortamiento distinto al del auditor, o (c) valores sintéticos/ilustrativos. Flagged en [questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md). El ancla transversal **"Continuaría sin pago: 100% (n=80)"** reconcilia como 98,75% (79/80), 1,25 pp exactos de diff — handoff abierto en [questions/009](../../questions/009_ancla_continuaria_sin_pago.md). Fuera de S1 y el ancla, los otros 8 indicadores reconcilian dentro de tolerancia `ok` o `nota`. 4 de 10 violan visual_rules.
+Social fue inicialmente la sección más conflictiva del Tiempo 2 (3 bloqueos en S1 "Desacople del Incentivo" + 1 handoff en ancla "continuaría sin pago"). **Ambos issues quedaron resueltos empíricamente el 2026-04-18**:
+
+- **S1 (questions/008)**: la fórmula correcta es `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio` cohortado por columna **nativa** `Fase del Proyecto`. Bajo esa fórmula, `bienestar_C` y `bienestar_D` reconcilian exactamente con el dashboard. `bienestar_A` y `bienestar_A+B` corresponden a la versión del dataset de la tesis publicada (Velásquez, Palacio, Álvarez 2025); decisión académica **version-lock**: mantener cifras de tesis, downgrade de bloqueo→ok.
+- **S_ANCLA (questions/009)**: el caso "disidente" respondió `'Mucho'` (afirmativo intensificado, no negación). Normalización categórica con `TRIM(LOWER) IN ('si','sí','mucho')` reconcilia 80/80 = 100% — ancla confirmada.
+
+**Estado final post-resolución**: 0 bloqueos. La metodología incorpora dos correcciones permanentes: (a) uso de columnas categóricas nativas sobre derivaciones manuales; (b) `common.validate_cardinality()` preventivo en categóricas. 4 de 10 indicadores siguen violando visual_rules — deuda diferida a Fase 4.
 
 ## Hallazgos por indicador
 

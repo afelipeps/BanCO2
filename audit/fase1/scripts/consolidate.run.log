@@ -5,16 +5,16 @@ Consolidado escrito: audit\fase1\auditoria_estadistica.xlsx
   poblacion              5               23          19  22     0        1        0               19
 territorial              6               22           8  16     3        3        0                7
   ambiental              6               31           4  24     3        4        0                2
-     social             10               29          14  19     2        5        3                7
+     social             10               25           8  20     3        2        0                7
  gobernanza              8               19          14  15     2        2        0               14
 
 === TOTALES ===
   n_indicadores_total = 35
-  n_filas_resumen_total = 124
-  ok total = 96
-  nota total = 10
-  handoff total = 15
-  bloqueo total = 3
+  n_filas_resumen_total = 120
+  ok total = 97
+  nota total = 11
+  handoff total = 12
+  bloqueo total = 0
   viola_viz_rules total = 49
 
 === QUESTIONS (total 9) ===

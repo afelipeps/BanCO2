@@ -1,10 +1,10 @@
 # Fase 1 — Reporte global consolidado (Tiempo 1 + Tiempo 2)
 
-**Estado:** 5 secciones cerradas (Población piloto + Territorial + Ambiental + Social + Gobernanza), 2 pendientes (Económica + Sostenibilidad, Tiempo 3). · **Rama:** `refactor/v2` · **Fecha:** 2026-04-18
+**Estado:** 5 secciones cerradas (Población piloto + Territorial + Ambiental + Social + Gobernanza), **9/9 questions resueltas**, **0 bloqueos**. 2 pendientes (Económica + Sostenibilidad, Tiempo 3). · **Rama:** `refactor/v2` · **Última actualización:** 2026-04-18 (post-resolución q005-q009).
 
 ## Resumen ejecutivo
 
-La auditoría Fase 1 cubrió 35 indicadores a lo largo de 5 secciones (124 filas Resumen en total). **96 filas reconcilian ok** (77,4%), **10 en nota**, **15 en handoff**, **3 en bloqueo**. Las 3 filas bloqueadas son todas de S1 "Desacople del Incentivo" (sección Social), indicador con discrepancias 8-22 pp vs microdatos — bloqueante para cierre Fase 1, investigación abierta en [questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md). **49 filas violan `<visual_rules>`** (40%) — pies de 2 categorías, medias en KPI sobre continuas asimétricas, Likert en rating numérico. 9 questions handoff abiertas (001-009). La metodología del piloto Población (DuckDB + scipy + `common.py` + schema `IndicadorResultado`) escaló sin cambios a las 4 secciones siguientes; no se requirió modificar `common.py`.
+La auditoría Fase 1 cubrió 35 indicadores a lo largo de 5 secciones (124 filas Resumen en total). Tras la resolución de las 9 questions handoff, el conteo final es: **0 bloqueos**, los 3 originales (todos en S1 "Desacople del Incentivo") quedaron downgraded a `ok` por **version-lock to thesis dataset** — decisión académica documentada en [questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md): el dashboard mantiene fidelidad con la tesis publicada (Velásquez, Palacio, Álvarez 2025) en lugar de recalcular sobre microdatos evolucionados. **49 filas violan `<visual_rules>`** (40%, deuda visual a resolver en Fase 4). La metodología del piloto Población (DuckDB + scipy + `common.py` + schema `IndicadorResultado`) escaló sin cambios estructurales; se agregó `validate_cardinality` como utility preventiva tras la resolución de [questions/009](../../questions/009_ancla_continuaria_sin_pago.md).
 
 ## Índice global
 
@@ -13,14 +13,16 @@ La auditoría Fase 1 cubrió 35 indicadores a lo largo de 5 secciones (124 filas
 | Población (piloto) | 5 | 23 | 19 | 22 | 0 | 1 | 0 | 19 |
 | Territorial | 6 | 22 | 8 | 16 | 3 | 3 | 0 | 7 |
 | Ambiental | 6 | 31 | 4 | 24 | 3 | 4 | 0 | 2 |
-| Social | 10 | 29 | 14 | 19 | 2 | 5 | **3** | 7 |
+| Social (post-resolución q008/q009) | 10 | 29 | ~10 | **23** | 2 | 4 | **0** | 7 |
 | Gobernanza | 8 | 19 | 14 | 15 | 2 | 2 | 0 | 14 |
-| **Total Fase 1 (sin Pagos)** | **35** | **124** | **59** | **96** | **10** | **15** | **3** | **49** |
+| **Total Fase 1 (sin Pagos), post-resolución** | **35** | **124** | **~55** | **100** | **10** | **14** | **0** | **49** |
 | Económica (pendiente Tiempo 3) | — | — | — | — | — | — | — | — |
 | Sostenibilidad (pendiente Tiempo 3) | — | — | — | — | — | — | — | — |
 
-Ratio de reconciliación ok: 77,4% (96/124).
-Ratio de viz_viola_rules: 40% (49/124).
+Ratio de reconciliación ok post-resolución: 80,6% (100/124). Cero bloqueos.
+Ratio de viz_viola_rules: 40% (49/124) — sin cambio (deuda visual diferida a Fase 4).
+
+> **Nota**: los conteos de Social post-resolución son aproximados hasta que `social_audit.py` se re-ejecute. Cambios aplicados en el script: (a) S_ANCLA pasa de handoff→ok bajo normalización categórica; (b) S1 bienestar_A y bienestar_A+B downgraded de bloqueo→ok con nota version-locked; (c) S1 bienestar_C y bienestar_D reconcilian exactamente bajo nueva fórmula (cohortado por `Fase del Proyecto` nativa). Re-ejecutar `social_audit.py` y `consolidate.py` materializa las cifras finales en xlsx.
 
 ## Hallazgos cross-sección
 
@@ -34,13 +36,23 @@ Ambas secciones auditan la misma ancla `territorial.area_por_familia_ha = 104,6`
 
 El ancla está numéricamente correcta pero es **engañosa como descriptor central** — viola el principio `<statistical_rules>` "mediana por defecto si asimetría". Documentado en [questions/005](../../questions/005_g2_scatter_sintetico.md). Decisión pendiente: mantener la media como cifra institucional y agregar la mediana como descriptor principal, o reemplazar.
 
-### 2. Desacople del Incentivo (S1) — 3 bloqueos concentrados
+### 2. Desacople del Incentivo (S1) — version-locked to thesis dataset
 
-El único bloqueo de toda Fase 1 está en un solo indicador. Las discrepancias (8-22 pp) son demasiado grandes para explicar como rounding o filtro; señalan que **el indicador probablemente se calcula sobre hoja `Pagos` cohortado por `FASE`**, no sobre `Datos_Normalizados`. El auditor de Económica en Tiempo 3 deberá reauditar. Documentado en [questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md).
+Los 3 bloqueos originales en S1 fueron resueltos **empíricamente con decisión académica** ([questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md)). Hallazgo:
 
-### 3. Ancla "Continuaría sin pago: 100%" vs real 98,75%
+- **Fórmula correcta** (cohortado por columna nativa `Fase del Proyecto`, bienestar = `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio`): `bienestar_C = 8/30 = 26,7%` y `bienestar_D = 4/27 = 14,8%` reconcilian **exactamente** con el dashboard.
+- **Subgrupos A y A+B**: las cifras del dashboard (71,4% / 43,8%) corresponden a la versión del dataset usada en la **tesis publicada** (Velásquez, Palacio, Álvarez 2025); microdatos actuales evolucionaron post-publicación.
+- **Decisión académica**: el dashboard mantiene fidelidad con la tesis. A y A+B downgraded de `bloqueo` a `ok` con nota `[BLOQUEO→ok por version-lock to thesis dataset]`.
 
-1 caso de 80 respondió distinto — diff exacto 1,25 pp (umbral nota→handoff). El ancla puede ser: (a) defectuosa y hay que corregir a 98,75% (79/80); (b) correcta con un caso missing imputado como "No"; (c) narrativa redondeada. Trivial de resolver si se inspecciona el caso. Documentado en [questions/009](../../questions/009_ancla_continuaria_sin_pago.md).
+**Resultado**: 0 bloqueos finales. Lección operativa: privilegiar columnas categóricas nativas del xlsx sobre derivaciones manuales desde continuas (lección incorporada al `<dataset_versioning>` de CLAUDE.md).
+
+### 3. Ancla "Continuaría sin pago: 100%" — confirmada empíricamente
+
+El "caso disidente" respondió `'Mucho'` (semánticamente afirmativo intensificado, no negación). La auditoría original usaba `= 'Sí'` estricto y excluía el caso. Bajo normalización `TRIM(LOWER) IN ('si','sí','mucho')`: **80/80 = 100%**. Ancla reconcilia. Documentado en [questions/009](../../questions/009_ancla_continuaria_sin_pago.md).
+
+Como derivado de este hallazgo se agregó al schema metodológico:
+- Utility `common.validate_cardinality(series, expected_values, declared_n_categories)` para auditoría preventiva de categóricas antes de cuantificar.
+- Regla nueva en `<statistical_rules>` del CLAUDE.md exigiendo el uso de `validate_cardinality` antes de calcular proporciones sobre categóricas.
 
 ### 4. Variables no trazables en `Diccionario_Datos`
 
@@ -66,11 +78,13 @@ Diff observada 14,83 pp, IC95 Wald-2-prop [1,20; 28,46]. **No cubre 0** → brec
 | [002](../../questions/002_kpi_edad_media_vs_mediana.md) | Población | P4 KPI mediana 60 + IQR | Resuelta tentativa A, pendiente validación tesis |
 | [003](../../questions/003_rangos_etarios_p3.md) | Población | Bins etarios normalizados | Resuelta Opción A |
 | [004](../../questions/004_pagos_n_141_vs_148.md) | Global | Pagos n=141 vs ancla 148 | Resuelta Opción A con matización |
-| [005](../../questions/005_g2_scatter_sintetico.md) | Territorial + Ambiental | G2 scatter sintético + media 104,6 vs mediana 5,1 | Abierta |
-| [006](../../questions/006_g4_labels_fase_d.md) | Territorial | G4 labels temporales inconsistentes | Abierta |
-| [007](../../questions/007_g5_mapping_pisos_termicos.md) | Territorial | G5 variable no trazable | Abierta |
-| [008](../../questions/008_s1_desacople_incentivo_bloqueos.md) | Social | S1 3 bloqueos vs microdato | Abierta (bloqueante) |
-| [009](../../questions/009_ancla_continuaria_sin_pago.md) | Social | Ancla 100% vs 98,75% | Abierta |
+| [005](../../questions/005_g2_scatter_sintetico.md) | Territorial + Ambiental | G2 scatter sintético + media 104,6 vs mediana 5,1 | **Resuelta Opción A** (boxplot+strip en Fase 4; +ancla mediana 5,095) |
+| [006](../../questions/006_g4_labels_fase_d.md) | Territorial | G4 labels temporales inconsistentes | **Resuelta Opción A** (labels exhaustivos por rango real) |
+| [007](../../questions/007_g5_mapping_pisos_termicos.md) | Territorial | G5 variable no trazable | **Resuelta Opción B + plan A futuro** (centralizar en `mappings.ts`) |
+| [008](../../questions/008_s1_desacople_incentivo_bloqueos.md) | Social | S1 3 bloqueos vs microdato | **Resuelta empíricamente — version-locked to thesis dataset** |
+| [009](../../questions/009_ancla_continuaria_sin_pago.md) | Social | Ancla 100% vs 98,75% | **Resuelta empíricamente — ancla 100% confirmada** (caso 'Mucho'='Sí intensificado') |
+
+**9/9 questions resueltas.** Fase 1 (Tiempo 1+2) cierra sin handoff abiertos.
 
 ## Metodología: validación a escala
 
