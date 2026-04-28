@@ -65,9 +65,20 @@ async function clickTab(page, label, isMobile) {
   await ensureSidebarOpen(page, isMobile);
   const button = page.locator(`aside nav button:has-text("${label}")`);
   await button.click();
-  await page.waitForTimeout(700);
+  // Animations OFF via addStyleTag (al inicio del context); 1500ms para que
+  // recharts termine cualquier reflow inicial sin transition.
+  await page.waitForTimeout(1500);
   await page.waitForLoadState("networkidle").catch(() => {});
 }
+
+const DISABLE_ANIMATIONS_CSS = `
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+`;
 
 const browser = await chromium.launch({ headless: true });
 const results = [];
@@ -83,6 +94,7 @@ try {
 
     try {
       await page.goto(URL, { waitUntil: "networkidle", timeout: 30000 });
+      await page.addStyleTag({ content: DISABLE_ANIMATIONS_CSS });
       await page.waitForSelector("aside nav button", { timeout: 10000 });
     } catch (err) {
       console.error(`FAIL navigate ${vp.name}: ${err}`);
