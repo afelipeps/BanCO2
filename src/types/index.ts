@@ -42,4 +42,3 @@ export type {
   DataSource,
   SectionKey,
 } from './indicator';
-export type { IndicatorLegacy, CategoryLegacy } from './legacy';
