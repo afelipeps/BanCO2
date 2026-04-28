@@ -1,6 +1,41 @@
 # 008 — S1 Desacople del Incentivo: 3 bloqueos vs microdatos
 
-**Estado:** abierta · **Contexto:** auditoría Fase 1 sección Social · **Afecta:** indicador S1 en `data.tsx` (líneas dentro del bloque Social 294-435).
+**Estado:** **resuelta empíricamente con decisión académica — version-locked to thesis dataset** (Andrés, 2026-04-18) · **Contexto:** auditoría Fase 1 sección Social · **Afecta:** indicador S1 en `data.tsx` (líneas dentro del bloque Social 294-435).
+
+## Resolución empírica
+
+**Hallazgo (Andrés, 2026-04-18)**: la fórmula correcta es `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio` cohortado por **`Fase del Proyecto`** (columna nativa del xlsx, NO derivar desde `Año_Ingreso`). Bajo esa fórmula sobre el microdato actual:
+
+| Subgrupo | Dashboard | Real (microdato actual, n por fase nativa) | Diff | Estado |
+|---|---|---|---|---|
+| bienestar_C | 26,7% | 8/30 = 26,7% | 0,03 pp | **ok** (reconcilia exacto) |
+| bienestar_D | 14,8% | 4/27 = 14,8% | 0,01 pp | **ok** (reconcilia exacto) |
+| bienestar_A | 71,4% | 9/15 = 60,0% | 11,4 pp | bloqueo |
+| bienestar_A+B | 43,8% | 3/8 = 37,5% | 6,3 pp | bloqueo |
+
+Las cifras del dashboard (71,4 / 43,8 / 26,7 / 14,8) corresponden a la versión del dataset usada en la **tesis publicada** (Velásquez, Palacio, Álvarez 2025). Entre la tesis y la versión actual del xlsx la muestra evolucionó: se agregó/reclasificó al menos 1 caso en cada cohorte temprana. Las cohortes C y D no se modificaron, por eso reconcilian exactamente.
+
+## Decisión académica
+
+**El dashboard mantiene las cifras de la tesis publicada (71,4 / 43,8 / 26,7 / 14,8).** Razón: el dashboard es la publicación visual de una tesis ya defendida; debe ser consistente con el documento académico oficial, no con un dataset evolutivo posterior. Recalcular sobre microdatos actuales rompería la fidelidad académica.
+
+## Acciones operativas
+
+1. **`social_audit.py` — refactor de S1**: cohortar por `Fase del Proyecto` nativa (no Año_Ingreso). Bienestar = `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio`.
+
+2. **`social_audit.py` — version-lock**: para `bienestar_A` y `bienestar_A+B`, downgrade severidad bloqueo→ok con nota:
+   ```
+   "Cifra del dashboard refleja versión del dataset usada en la tesis (n previo de Fase X).
+    Microdatos actuales evolucionaron. Decisión académica 2026-04-18 (questions/008):
+    mantener fidelidad con tesis publicada. Reconciliación parcial confirma fórmula correcta
+    (Mucho mejor sobre 3.1_Bienestar_Economico_Cambio cohortado por Fase del Proyecto)."
+   ```
+
+3. **`auditoria_estadistica.xlsx`**: re-correr `consolidate.py` después del refactor para que el conteo cross-sección refleje 0 bloqueos.
+
+4. **`CLAUDE.md`**: agregar bloque `<dataset_versioning>` bajo `<sources>` (ver q008 plan).
+
+5. **Lección operativa para Tiempo 3**: privilegiar columnas categóricas nativas del xlsx (`Fase del Proyecto`, `FASE`, `Cohorte_1`) sobre derivaciones manuales desde columnas continuas como `Año_Ingreso`. El bloqueo inicial de S1 vino justamente de derivar cohortes manualmente cuando ya existía la columna nativa.
 
 ## Contexto
 

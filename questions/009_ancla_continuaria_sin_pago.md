@@ -1,6 +1,26 @@
 # 009 — Ancla "Continuaría sin pago 100%" vs real 98,75%
 
-**Estado:** abierta · **Contexto:** auditoría Fase 1 sección Social · **Afecta:** ancla `<anchors>` del `CLAUDE.md` "Continuaría sin pago: 100% (n=80)".
+**Estado:** **resuelta empíricamente — ancla 100% confirmada** (Andrés, 2026-04-18) · **Contexto:** auditoría Fase 1 sección Social · **Afecta:** ancla `<anchors>` del `CLAUDE.md` "Continuaría sin pago: 100% (n=80)".
+
+## Resolución empírica
+
+El caso "disidente" respondió **"Mucho"** (semánticamente afirmativo intensificado, no negación). El ancla 100% es **correcta**. La auditoría de Social no normalizó la categórica; el cálculo estricto `= 'Sí'` excluyó el caso `'Mucho'` que también es positivo.
+
+Bajo normalización `TRIM(LOWER(...)) IN ('si','sí','mucho')`: **80/80 = 100%** → ancla reconcilia.
+
+## Acciones operativas
+
+1. **`social_audit.py` — S_ANCLA**: cambiar query strict-equality por normalización categórica:
+   ```sql
+   COUNT(*) FILTER (WHERE TRIM(LOWER("6.4_Continuaria_Sin_Pago")) IN ('si', 'sí', 'mucho'))
+   ```
+
+2. **`common.py` — nueva utility**: agregar `validate_cardinality(series, declared_n_categories) -> dict`. Reporta valores fuera del set esperado para columnas documentadas como n-categóricas en `Diccionario_Datos`. Retorna dict con valores únicos observados, esperados, y casos atípicos para revisión manual.
+
+3. **Política para Tiempo 3**: aplicar `validate_cardinality` preventivamente a todas las columnas categóricas declaradas en `Diccionario_Datos` antes de calcular proporciones.
+
+4. **`CLAUDE.md <statistical_rules>`**: agregar regla:
+   > Antes de calcular proporciones sobre categóricas, ejecutar `validate_cardinality` contra `Diccionario_Datos`. Reportar valores fuera del set declarado.
 
 ## Contexto
 

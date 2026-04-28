@@ -1,6 +1,20 @@
 # Questions/006 — G4 Madurez: labels de fase D y copy "2021-2024"
 
-Estado: **waiting_human_review** · Autor: sub-agente Territorial (Fase 1) · 2026-04-18
+Estado: **resuelta — Opción A** (Andrés, 2026-04-18) · Autor: sub-agente Territorial (Fase 1)
+
+## Decisión
+
+**Opción A aprobada.** Acciones para Fase 4 (migración visual):
+
+1. Renombrar labels en `data.tsx:69-83` con rangos exhaustivos por bin real:
+   - `Fase A` → `Fase A (≤2017)`
+   - `Fase A + B (2019)` → `Fase A+B (2018-2019)`
+   - `Fase A + B + C (2021)` → `Fase A+B+C (2020-2021)`
+   - `Fase A + B + C + D (2023-2024)` → `Fase A+B+C+D (2022-2025)`
+
+2. Story actualizado: "se vinculó en 2020-2025" (en lugar de "2021-2024"). El 71,25% en C+D refleja ingresos del rango real.
+
+3. El caso único de 2009 (1 fila) queda en Fase A bajo regla `≤2017`; se documenta como ingreso retroactivo en el copy del indicador.
 
 ## Contexto mínimo
 

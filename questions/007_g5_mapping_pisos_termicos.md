@@ -1,6 +1,35 @@
 # Questions/007 — G5 Pisos Térmicos: variable fuente no trazable en diccionario
 
-Estado: **waiting_human_review** · Autor: sub-agente Territorial (Fase 1) · 2026-04-18
+Estado: **resuelta — Opción B con plan A futuro** (Andrés, 2026-04-18) · Autor: sub-agente Territorial (Fase 1)
+
+## Decisión
+
+**Opción B aprobada para Fase 4** (centralizar el mapping en código, NO promover a columna del xlsx aún) · **Plan A en Fase 3 arquitectural** (evaluar promover a columna del xlsx).
+
+Acciones:
+
+1. **Fase 4**: extraer `PISO_TERMICO_MAP` desde `territorial_audit.py` y centralizarlo en `src/data/mappings.ts` con metadata de fuente:
+   ```ts
+   // src/data/mappings.ts
+   export const PISO_TERMICO_MAP = {
+     /** Fuente: derivación geográfica del Oriente Antioqueño + reconciliación
+      *  con cifras del dashboard (36/29/15). Verificada en audit/fase1/scripts/territorial_audit.py
+      *  el 2026-04-18. No formalizada en Diccionario_Datos del xlsx (questions/007). */
+     "Puerto Triunfo": "Cálido (Magdalena)",
+     "San Rafael":     "Templado (Bosques)",
+     "San Carlos":     "Templado (Bosques)",
+     "Cocorná":        "Templado (Bosques)",
+     "San Luis":       "Templado (Bosques)",
+     "San Francisco":  "Templado (Bosques)",
+     "La Ceja":        "Frío (Altiplano)",
+     "Granada":        "Frío (Altiplano)",
+     "El Peñol":       "Frío (Altiplano)",
+     "Guarne":         "Frío (Altiplano)",
+     "Guatapé":        "Frío (Altiplano)",
+   } as const;
+   ```
+
+2. **Fase 3 arquitectural**: evaluar si conviene **promover** este mapping a columna `Piso_Termico` derivada en `Datos_Normalizados`. Pros: trazabilidad en `Diccionario_Datos`, consistencia con otras derivadas (`Rango_Edad`, `Cohorte_1`). Contras: cambia el xlsx fuente, requiere coordinación con Masbosques. Decisión queda pendiente para cuando se aborde el versionado del dataset.
 
 ## Contexto mínimo
 

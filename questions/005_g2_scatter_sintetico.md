@@ -1,6 +1,18 @@
 # Questions/005 — G2 ICE: scatter sintético y ancla 104,6 ha/familia
 
-Estado: **waiting_human_review** · Autor: sub-agente Territorial (Fase 1) · 2026-04-18
+Estado: **resuelta — Opción A** (Andrés, 2026-04-18) · Autor: sub-agente Territorial (Fase 1)
+
+## Decisión
+
+**Opción A aprobada.** Acciones:
+
+1. **Fase 4 (migración visual)**: reemplazar `chart_scatter` sintético por **boxplot + strip plot** sobre `Area_Conservacion_Ha_NUM` real (n=66; mediana 5,095 ha; IQR [2,36; 11,63]). Story reescrita con cifras reales: "La mediana de área conservada por familia es 5 ha; el 75% conserva ≥95% de su predio. El 'promedio' de 104,6 ha está distorsionado por un único caso de 6.379 ha."
+
+2. **CLAUDE.md `<anchors>`**: agregar ancla complementaria
+   ```
+   - territorial.area_conservacion.mediana_ha = 5,095
+   ```
+   La mediana es el descriptor central correcto bajo `<statistical_rules>` para continua asimétrica con outlier; la media 104,6 ha se mantiene en `<anchors>` como cifra institucional histórica con la matización documentada.
 
 ## Contexto mínimo
 
