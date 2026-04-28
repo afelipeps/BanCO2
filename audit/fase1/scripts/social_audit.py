@@ -3,7 +3,7 @@
 Fase 1 — sub-agente Social. Rama `refactor/v2`.
 
 Indicadores (data.tsx líneas 294-435):
-    S1  Desacople del Incentivo           chart_line_multi       1.9_Año_Ingreso × {3.1,6.4}
+    S1  Desacople del Incentivo           chart_line_multi       Fase del Proyecto × {3.1,6.4}  (refactor q008)
     S2  Destino de la Inversión PSA       chart_bar_horizontal   3.2_Inversion_PSA_Seleccion
     S3  Capacidad de Ahorro                chart_bar_vertical     3.3_Mejoro_Ahorro_Estabilidad_SiNo
     S4  Acceso a Educación                 kpi_card               3.7_Acceso_Educacion_SiNo
@@ -104,42 +104,119 @@ def main() -> int:
     metodo: list[MetodoRow] = []
 
     # ========================================================================
-    # S1 — Desacople del Incentivo
-    # Código: 4 fases A/B/C/D con bienestar [71.4, 43.8, 26.7, 14.8]% y compromiso=100%.
-    # Microdato: ninguna partición natural (por Año_Ingreso, Cohorte_1, Antiguedad,
-    # Rango_Edad) reproduce las 4 cifras. Abrir handoff 006 y registrar:
-    # - por fase construida como ventana de Año_Ingreso {A:<2019, B:2019-2020, C:2021-2022, D:>=2023}
-    # - 'compromiso' = % 6.4_Continuaria_Sin_Pago='Sí' (con ancla 100% pero real 79/80=98.75%)
+    # S1 — Desacople del Incentivo (refactor 2026-04-18, questions/008 resuelta)
+    #
+    # Cohortado por columna NATIVA "Fase del Proyecto" (no derivar de Año_Ingreso).
+    # Bienestar = % '3.1_Bienestar_Economico_Cambio' = 'Mucho mejor'.
+    # Compromiso = % '6.4_Continuaria_Sin_Pago' normalizada (TRIM LOWER IN si/sí/mucho).
+    #
+    # Bajo este formula:
+    #   - bienestar_C, bienestar_D reconcilian exactamente con el dashboard.
+    #   - bienestar_A, bienestar_A+B difieren del dashboard porque el dataset
+    #     evolucionó después de la tesis publicada. Decisión académica
+    #     (questions/008): version-lock — mantener fidelidad con tesis.
+    #     Severidad bloqueo→ok con nota explícita.
     # ========================================================================
-    q1_fases = """
+
+    # Detección defensiva del nombre exacto de la columna nativa (puede tener
+    # variantes con/sin prefijo numérico o normalización de espacio).
+    existing_cols = [r[0] for r in con.execute("DESCRIBE datos").fetchall()]
+    _fase_candidates = [
+        "Fase del Proyecto", "Fase_del_Proyecto", "Fase del proyecto",
+        "Fase del Proyecto ", "FaseDelProyecto",
+    ]
+    _fase_col = next((c for c in _fase_candidates if c in existing_cols), None)
+    if _fase_col is None:
+        # Fallback: cualquier columna que contenga 'fase' y 'proyecto' (case-insensitive).
+        _fase_col = next(
+            (c for c in existing_cols if "fase" in c.lower() and "proyecto" in c.lower()),
+            None,
+        )
+    if _fase_col is None:
+        raise RuntimeError(
+            "S1: no encontré columna nativa 'Fase del Proyecto' en Datos_Normalizados. "
+            f"Columnas con 'fase' detectadas: "
+            f"{[c for c in existing_cols if 'fase' in c.lower()]}. "
+            "Resolución: identificar el nombre exacto y agregarlo a _fase_candidates."
+        )
+
+    q1_fases = f'''
     SELECT
-        CASE
-            WHEN TRY_CAST("1.9_Año_Ingreso" AS INT) < 2019 THEN 'A (pre-2019)'
-            WHEN TRY_CAST("1.9_Año_Ingreso" AS INT) < 2021 THEN 'B (2019-2020)'
-            WHEN TRY_CAST("1.9_Año_Ingreso" AS INT) < 2023 THEN 'C (2021-2022)'
-            ELSE 'D (2023+)'
-        END fase,
+        "{_fase_col}" fase_native,
         COUNT(*) n,
         SUM(CASE WHEN "3.1_Bienestar_Economico_Cambio" = 'Mucho mejor' THEN 1 ELSE 0 END) bienestar_mm,
-        SUM(CASE WHEN "6.4_Continuaria_Sin_Pago" = 'Sí' THEN 1 ELSE 0 END) continuaria_si
+        SUM(CASE WHEN TRIM(LOWER("6.4_Continuaria_Sin_Pago")) IN ('si', 'sí', 'mucho') THEN 1 ELSE 0 END) continuaria_si
     FROM datos
     GROUP BY 1 ORDER BY 1
-    """
+    '''
     df_s1 = con.execute(q1_fases).fetchdf()
-    CODIGO_BIENESTAR = {"A (pre-2019)": 0.714, "B (2019-2020)": 0.438, "C (2021-2022)": 0.267, "D (2023+)": 0.148}
+
+    def _normalize_fase(s: str) -> str:
+        s = (s or "").strip()
+        if s in ("Fase A", "A"):
+            return "A"
+        if s in ("Fase A+B", "Fase A y B", "Fase A + B", "A+B", "A y B"):
+            return "A+B"
+        if s in ("Fase B", "B"):
+            return "B"
+        if s in ("Fase C", "C"):
+            return "C"
+        if s in ("Fase D", "D"):
+            return "D"
+        return s  # devolver tal cual si no matchea
+
+    CODIGO_BIENESTAR = {"A": 0.714, "A+B": 0.438, "B": 0.438, "C": 0.267, "D": 0.148}
+
+    # Version-lock por decisión académica (questions/008): el dashboard
+    # publica las cifras de la tesis defendida; A y A+B tienen diff con
+    # microdatos actuales por evolución del dataset post-publicación.
+    VERSION_LOCKED_S1 = {
+        "bienestar_A": (
+            "Cifra del dashboard refleja versión del dataset usada en la tesis "
+            "(n previo de Fase A). Microdatos actuales evolucionaron. "
+            "Decisión académica 2026-04-18 (questions/008): mantener fidelidad con tesis "
+            "publicada. Reconciliación parcial confirma fórmula correcta "
+            "(Mucho mejor sobre 3.1_Bienestar_Economico_Cambio cohortado por Fase del Proyecto)."
+        ),
+        "bienestar_A+B": (
+            "Cifra del dashboard refleja versión del dataset usada en la tesis "
+            "(n previo de Fase A+B). Microdatos actuales evolucionaron. "
+            "Decisión académica 2026-04-18 (questions/008): mantener fidelidad con tesis "
+            "publicada. Reconciliación parcial confirma fórmula correcta."
+        ),
+        "bienestar_B": (
+            "Cifra del dashboard refleja versión del dataset usada en la tesis "
+            "(n previo de Fase B). Microdatos actuales evolucionaron. "
+            "Decisión académica 2026-04-18 (questions/008): mantener fidelidad con tesis "
+            "publicada. Reconciliación parcial confirma fórmula correcta."
+        ),
+    }
+
     for row in df_s1.itertuples():
+        fase_key = _normalize_fase(row.fase_native)
+        v_codigo = CODIGO_BIENESTAR.get(fase_key)
+        if v_codigo is None or row.n == 0:
+            continue  # fase no esperada o vacía
         p_bienestar = row.bienestar_mm / row.n
-        v_codigo = CODIGO_BIENESTAR.get(row.fase)
         lo, hi, _ = wilson_ci(int(row.bienestar_mm), int(row.n))
         sev, diff = classify_severity(v_codigo, p_bienestar, int(row.n), unit_is_pp=True)
-        # Elevación manual: ningún mapping natural explica las 4 cifras del código.
-        sev = "handoff" if sev in ("ok", "nota") else sev
+        subgrupo_b = f"bienestar_{fase_key}"
+
+        notas_b = (
+            f"Cohortado por columna nativa '{_fase_col}' (no derivado de Año_Ingreso, "
+            f"questions/008). Bienestar = '3.1_Bienestar_Economico_Cambio' = 'Mucho mejor'. "
+        )
+        if subgrupo_b in VERSION_LOCKED_S1 and sev in ("bloqueo", "handoff"):
+            sev_orig = sev
+            sev = "ok"
+            notas_b = f"[{sev_orig.upper()}→ok por version-lock to thesis dataset] " + notas_b + VERSION_LOCKED_S1[subgrupo_b]
+
         resultados.append(IndicadorResultado(
             id_indicador="S1",
             seccion=SECCION,
             titulo_codigo="Desacople del Incentivo",
             tipo_stat="proporcion",
-            subgrupo=f"bienestar_{row.fase}",
+            subgrupo=subgrupo_b,
             valor_codigo=v_codigo,
             valor_real=p_bienestar,
             n_efectivo=int(row.n),
@@ -150,15 +227,12 @@ def main() -> int:
             viz_recomendada=VIZ_RECOM["S1"],
             viz_viola_rules=False,  # línea multi para serie temporal ordinal es aceptable
             severidad=sev,
-            discrepancia_pp=diff,
+            discrepancia_pp=diff,  # se mantiene para trazabilidad reversa
             ancla_ref=None,
-            notas=(
-                "Código usa 4 fases (A/B/C/D) con valores [71.4, 43.8, 26.7, 14.8]% para 'bienestar'. "
-                "Ningún split natural por Año_Ingreso reproduce las 4 cifras. Probable origen literal "
-                "de tesis, no calculado desde microdato. Ver questions/006."
-            ),
+            notas=notas_b,
         ))
-        # Compromiso por fase (100% en código)
+
+        # Compromiso por fase (100% en código, normalizado)
         p_compromiso = row.continuaria_si / row.n
         lo_c, hi_c, _ = wilson_ci(int(row.continuaria_si), int(row.n))
         sev_c, diff_c = classify_severity(1.0, p_compromiso, int(row.n), unit_is_pp=True)
@@ -167,7 +241,7 @@ def main() -> int:
             seccion=SECCION,
             titulo_codigo="Desacople del Incentivo",
             tipo_stat="proporcion",
-            subgrupo=f"compromiso_{row.fase}",
+            subgrupo=f"compromiso_{fase_key}",
             valor_codigo=1.0,
             valor_real=p_compromiso,
             n_efectivo=int(row.n),
@@ -180,23 +254,30 @@ def main() -> int:
             severidad=sev_c,
             discrepancia_pp=diff_c,
             ancla_ref=None,
-            notas="'Sí' literal / total en la fase. La fase B incluye 1 caso 'Mucho' (open-text) no contabilizado.",
+            notas=(
+                f"Cohortado por '{_fase_col}'. Compromiso = '6.4_Continuaria_Sin_Pago' "
+                "normalizada con TRIM(LOWER) IN ('si','sí','mucho')."
+            ),
         ))
+
     metodo.append(MetodoRow(
         id_indicador="S1",
-        variables_fuente="1.9_Año_Ingreso × 3.1_Bienestar_Economico_Cambio × 6.4_Continuaria_Sin_Pago",
+        variables_fuente=f"{_fase_col} × 3.1_Bienestar_Economico_Cambio × 6.4_Continuaria_Sin_Pago",
         query_duckdb=q1_fases.strip(),
-        formula_ic="Wilson 95% por fase (bienestar='Mucho mejor'/n, compromiso='Sí'/n)",
+        formula_ic="Wilson 95% por fase (bienestar='Mucho mejor'/n, compromiso=normalizado/n)",
         supuestos=(
-            "Fases construidas con ventanas cerradas de Año_Ingreso: A<2019, B∈[2019,2020], "
-            "C∈[2021,2022], D≥2023. El split es heurístico; el código no documenta cómo construyó las 4 fases."
+            f"Cohortado por columna nativa '{_fase_col}' (no derivar de Año_Ingreso). "
+            "Bienestar = '3.1_Bienestar_Economico_Cambio'='Mucho mejor'. "
+            "Compromiso = '6.4_Continuaria_Sin_Pago' normalizada con TRIM(LOWER) IN ('si','sí','mucho'). "
+            "Subgrupos bienestar_A y bienestar_A+B (o bienestar_B) version-locked a cifras de tesis "
+            "publicada por evolución del dataset (questions/008)."
         ),
         n_missing=0,
         missing_pct=0.0,
         notas_bins=(
-            "Ninguna partición natural del microdato (Año_Ingreso, Cohorte_1, Antiguedad, "
-            "Rango_Edad) reproduce [71.4, 43.8, 26.7, 14.8]. Probable origen literal de tesis. "
-            "Ver questions/006."
+            "Bajo fórmula corregida: bienestar_C y bienestar_D reconcilian exactamente con dashboard "
+            "(8/30=26.7%, 4/27=14.8%). bienestar_A y bienestar_A+B difieren por evolución del dataset "
+            "post-publicación; severidad downgraded de bloqueo→ok con nota version-locked."
         ),
     ))
 
@@ -725,12 +806,19 @@ def main() -> int:
 
     # ========================================================================
     # Ancla crítica: continuaria.sin_pago (100%). Validación transversal.
-    # Reporta el real 79/80 = 98.75% para documentar la discrepancia con la ancla.
+    # Resolución questions/009 (Andrés 2026-04-18): el caso "disidente" respondió
+    # 'Mucho' (semánticamente afirmativo intensificado, no negación). Normalizar
+    # categórica con TRIM(LOWER) IN ('si','sí','mucho') reconcilia 80/80=100%.
     # ========================================================================
-    q_ancla = "SELECT COUNT(*) FILTER (WHERE \"6.4_Continuaria_Sin_Pago\" = 'Sí') k, COUNT(*) n FROM datos"
+    q_ancla = (
+        "SELECT "
+        "COUNT(*) FILTER (WHERE TRIM(LOWER(\"6.4_Continuaria_Sin_Pago\")) IN ('si', 'sí', 'mucho')) k, "
+        "COUNT(*) n FROM datos"
+    )
     k_ap, n_ap = con.execute(q_ancla).fetchone()
     p_ap = k_ap / n_ap
     lo_ap, hi_ap, _ = wilson_ci(int(k_ap), int(n_ap))
+    sev_ap, diff_ap = classify_severity(1.0, p_ap, int(n_ap), unit_is_pp=True)
     resultados.append(IndicadorResultado(
         id_indicador="S_ANCLA",
         seccion=SECCION,
@@ -746,13 +834,13 @@ def main() -> int:
         viz_actual="(referencia transversal; no es viz del dashboard)",
         viz_recomendada="n/a",
         viz_viola_rules=False,
-        severidad="handoff",  # discrepancia vs ancla
-        discrepancia_pp=(1.0 - p_ap) * 100,
-        ancla_ref=None,  # ancla no formalizada en ANCHORS: se documenta en questions/005
+        severidad=sev_ap,
+        discrepancia_pp=diff_ap,
+        ancla_ref="continuaria.sin_pago",
         notas=(
-            "Ancla CLAUDE.md: 'Continuaría sin pago: 100% (n=80)'. Real: 79/80=98.75% — "
-            "1 caso con valor open-text 'Mucho' (posible typo de 'Sí, mucho', rol 6.3='ningu0.'). "
-            "Ambigüedad documentada en questions/005."
+            "Categórica '6.4_Continuaria_Sin_Pago' normalizada con TRIM(LOWER) IN ('si','sí','mucho'). "
+            "El caso open-text 'Mucho' es semánticamente afirmativo intensificado, no negación. "
+            "Bajo normalización: 80/80 = 100% → ancla reconcilia. Decisión 2026-04-18 en questions/009."
         ),
     ))
     metodo.append(MetodoRow(
@@ -760,10 +848,14 @@ def main() -> int:
         variables_fuente="6.4_Continuaria_Sin_Pago",
         query_duckdb=q_ancla,
         formula_ic="Wilson 95% binomial.",
-        supuestos="Se cuenta 'Sí' literal como positivo; 'Mucho' se trata como missing para estricto.",
+        supuestos=(
+            "Categórica normalizada con TRIM(LOWER) IN ('si','sí','mucho'). 'Mucho' se cuenta como "
+            "afirmativo intensificado (no como missing) por resolución questions/009. Ver utility "
+            "common.validate_cardinality para auditoría preventiva en futuras categóricas."
+        ),
         n_missing=0,
         missing_pct=0.0,
-        notas_bins="Ancla 100% vs real 98.75% — ver questions/005.",
+        notas_bins="Ancla 100% reconciliada bajo normalización; ver questions/009.",
     ))
 
     # ========================================================================
@@ -785,9 +877,10 @@ def main() -> int:
     p_jef = jef_row[0] / jef_row[1]
     diff_jef = abs(p_jef - ANCHORS["poblacion.jefatura.global_prop"])
     print(f"  jefatura_global: {p_jef:.4f} vs 0.8750 -> {'ok' if diff_jef < 0.01 else f'DIFF={diff_jef:.4f}'}")
-    # Continuaria sin pago
+    # Continuaria sin pago (normalizada categorica - questions/009 resuelta)
     diff_cont = abs(p_ap - 1.0)
-    print(f"  continuaria_sin_pago: {p_ap:.4f} vs 1.0000 (ancla) -> DIFF={diff_cont:.4f} (ver questions/005)")
+    status = "ok" if diff_cont < 0.001 else f"DIFF={diff_cont:.4f}"
+    print(f"  continuaria_sin_pago: {p_ap:.4f} vs 1.0000 (ancla) -> {status} (questions/009 resuelta: normalizacion categorica)")
 
     print(f"\nxlsx escrito: {OUT_XLSX}")
     return 0
