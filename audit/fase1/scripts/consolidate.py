@@ -29,6 +29,8 @@ SECCIONES = [
     ("ambiental", "audit/fase1/ambiental.xlsx"),
     ("social", "audit/fase1/social.xlsx"),
     ("gobernanza", "audit/fase1/gobernanza.xlsx"),
+    ("economica", "audit/fase1/economica.xlsx"),
+    ("sostenibilidad", "audit/fase1/sostenibilidad.xlsx"),
 ]
 
 OUT = Path("audit/fase1/auditoria_estadistica.xlsx")
@@ -96,12 +98,18 @@ def main() -> int:
     print(f"  bloqueo total = {int(indice_df['bloqueo'].sum())}")
     print(f"  viola_viz_rules total = {int(indice_df['viola_viz_rules'].sum())}")
 
-    # Questions abiertas
+    # Questions abiertas y cerradas
     questions_dir = Path("questions")
-    q_files = sorted(q for q in questions_dir.glob("[0-9][0-9][0-9]_*.md"))
-    print(f"\n=== QUESTIONS (total {len(q_files)}) ===")
-    for q in q_files:
+    closed_dir = questions_dir / "closed"
+    q_open = sorted(q for q in questions_dir.glob("[0-9][0-9][0-9]_*.md"))
+    q_closed = sorted(q for q in closed_dir.glob("[0-9][0-9][0-9]_*.md")) if closed_dir.exists() else []
+    print(f"\n=== QUESTIONS abiertas ({len(q_open)}) ===")
+    for q in q_open:
         print(f"  {q.name}")
+    print(f"\n=== QUESTIONS cerradas ({len(q_closed)}) ===")
+    for q in q_closed:
+        print(f"  closed/{q.name}")
+    print(f"\n=== TOTAL questions tracked: {len(q_open) + len(q_closed)} ===")
 
     return 0
 

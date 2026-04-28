@@ -464,6 +464,13 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
         story: {
           title: "Enfoque Comercial",
           text: "Entre las familias que tienen proyectos productivos activos, la mayoría se inclina hacia negocios con enfoque comercial (78.3%), en contraste con la minoría que se dedica a la subsistencia."
+        },
+        disclosure: {
+          source: "BASE_DATOS_BANCO2_NORMALIZADA hoja Gráficas rows 159-162",
+          transformation: "venta>25_pct_sobre_distribucion_medible_filtro_tesis_no_documentado",
+          timeWindow: "tesis-2025",
+          n: 23,
+          note: "Cut declarado: Venta > 25% sobre n=23 'Distribución Medible' (filtro tesis-time aplicado sobre proyectos con dato medible de distribución venta/autoconsumo/pérdida). Lógica del filtro no documentada en Diccionario_Datos; valores publicados conforme tesis Velásquez, Palacio, Álvarez 2025. [VERSION-LOCK-OVERRIDE q011]"
         }
       },
       {
@@ -511,6 +518,13 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
         story: {
           title: "Integración al Mercado",
           text: "Entre quienes producen, 56% logra vender más de la mitad de su cosecha, mientras el restante se queda entre autoconsumo, venta parcial y pérdida."
+        },
+        disclosure: {
+          source: "Tesis Velásquez, Palacio, Álvarez 2025 (recodificación tesis-time)",
+          transformation: "clasificacion_destino_tesis_no_reproducible_microdatos",
+          timeWindow: "tesis-2025",
+          n: null,
+          note: "Clasificación basada en recodificación tesis-time sobre subset de proyectos con distribución medible de producción. Fórmula específica no documentada en Diccionario_Datos; cifras publicadas conforme tesis Velásquez, Palacio, Álvarez 2025. [VERSION-LOCK-OVERRIDE q012]"
         }
       },
       {
@@ -570,6 +584,13 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
         story: {
           title: "Ruta de Madurez",
           text: "De la Producción Total (100%), el 44% se queda en Autoconsumo (subsistencia). El reto comercial está en el siguiente escalón: un 30% logra Venta Parcial, y solo el 26% alcanza la Venta Consolidada, convirtiéndose en negocios sostenibles."
+        },
+        disclosure: {
+          source: "Tesis Velásquez, Palacio, Álvarez 2025 (recodificación tesis-time)",
+          transformation: "clasificacion_madurez_comercial_tesis_no_reproducible_microdatos",
+          timeWindow: "tesis-2025",
+          n: null,
+          note: "Clasificación basada en recodificación tesis-time sobre subset de proyectos con distribución medible de producción. Fórmula específica no documentada en Diccionario_Datos; cifras publicadas conforme tesis Velásquez, Palacio, Álvarez 2025. [VERSION-LOCK-OVERRIDE q012]"
         }
       }
     ]
@@ -745,6 +766,14 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
         story: {
           title: "Riesgo Operativo",
           text: "La sostenibilidad no es solo ecológica y financiera, sino también operacional. Retrasos, trámites y fallas de comunicación erosionan la capacidad del programa para sostener en el tiempo la confianza y el compromiso. Si este problema se intensifica, puede desencadenar un efecto bola de nieve: menor confianza, menor participación, menos disposición a mantener prácticas de conservación cuando hay dificultades."
+        },
+        disclosure: {
+          source: "BASE_DATOS_BANCO2_NORMALIZADA hoja Gráficas rows 230-234",
+          transformation: "conteo_keywords_manual_open_text_tesis_time",
+          timeWindow: "tesis-2025",
+          n: 80,
+          totalMenciones: 140,
+          note: "Categorías derivadas de codificación manual de menciones por palabras clave sobre respuestas abiertas (n=140 menciones, multi-select sobre n=80 familias = 1,75 menciones/familia). Fuente: BASE_DATOS_BANCO2_NORMALIZADA hoja Gráficas rows 230-234. [VERSION-LOCK-OVERRIDE q010]"
         }
       },
       {
@@ -788,6 +817,13 @@ export const DATA_SOURCE_OF_TRUTH: DataSource = {
     title: "8. SROI",
     subtitle: "Eficiencia Subsidiada",
     description: "Evaluación del Retorno Social de la Inversión: Valor Público vs. Fragilidad Privada (2017-2024). Este panel revela cómo el éxito financiero del programa se sustenta en un subsidio invisible aportado por la comunidad.",
+    disclosure: {
+      source: "Tesis Velásquez, Palacio, Álvarez 2025, Apéndice 1 SROI",
+      transformation: "calculo_sroi_metodologia_social_value_international",
+      timeWindow: "2022-2023",
+      n: null,
+      note: "Cálculo SROI conforme metodología Social Value International (shadow wages, deadweight, attribution, displacement, drop-off rate). Inputs $1.765.929.034 (Masbosques + 3 municipios + CORNARE). Outputs $3.926.103.128 (3 dimensiones monetizadas). Outcomes no monetizados documentados como deuda metodológica para iteración futura. Fuente primaria: Apéndice 1, tesis Velásquez et al. 2025. [VERSION-LOCK-OVERRIDE q013]"
+    },
     indicators: [
       {
         id: "SR1",

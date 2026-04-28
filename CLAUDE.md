@@ -49,6 +49,8 @@ Política: el dashboard mantiene fidelidad con la tesis publicada (documento aca
 Caso documentado: S1 Desacople del Incentivo (Social). Cifras 26,7% (C) y 14,8% (D) reconcilian exactamente bajo fórmula correcta (`'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio` cohortado por columna nativa `Fase del Proyecto`); 71,4% (A) y 43,8% (A+B) corresponden a n previo. Decisión 2026-04-18 (questions/008): mantener cifras de tesis.
 
 Lección operativa: privilegiar columnas categóricas nativas del xlsx (`Fase del Proyecto`, `FASE`, `Cohorte_1`) sobre derivaciones manuales desde columnas continuas como `Año_Ingreso`. Las derivaciones manuales producen cohortes distintas a las nativas y disparan falsos bloqueos en la auditoría.
+
+[VERSION-LOCK-OVERRIDE]: variante de version-lock aplicable cuando la fuente documental existe y es trazable (hoja `Gráficas` del xlsx, anexo de la tesis u otro documento del proyecto) pero la fórmula declarada no reproduce sobre microdatos actuales con cuts simples. Override del criterio C1 de magnitud (≤2pp para proporciones, ≤5% relativo para continuas) justificado por la trazabilidad documental. Requiere disclosure metodológico explícito en data.tsx (shape `{ source, transformation, timeWindow, n, note }`) y en el footer académico del indicador. Severidad final: `nota` con flag `[VERSION-LOCK-OVERRIDE]` en notas. NO bloqueo. Casos documentados (2026-04-28): ST4 Fricción Operativa (q010, fuente hoja Gráficas rows 230-234), E2 Vocación Productiva (q011, fuente Gráficas rows 159-162), E5/E9 Destino y Funnel (q012, recodificación tesis-time confirmada por coautor), SROI section (q013, fuente Apéndice 1 tesis).
 </dataset_versioning>
 
 <anchors>

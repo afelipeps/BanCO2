@@ -6,6 +6,15 @@ export interface Story {
   type?: 'info' | 'alert' | 'success' | string;
 }
 
+export interface Disclosure {
+  source: string;
+  transformation: string;
+  timeWindow: string;
+  n?: number | null;
+  totalMenciones?: number;
+  note: string;
+}
+
 export interface BarConfig {
   key: string;
   name: string;
@@ -32,6 +41,7 @@ export interface Indicator {
   bars?: BarConfig[];
   story: Story;
   regressionPoints?: any[];
+  disclosure?: Disclosure;
 }
 
 export interface Category {
@@ -40,6 +50,7 @@ export interface Category {
   subtitle: string;
   description: string;
   indicators: Indicator[];
+  disclosure?: Disclosure;
 }
 
 export interface DataSource {

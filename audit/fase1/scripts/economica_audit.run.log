@@ -1,0 +1,20 @@
+filas_resumen=37 indicadores=10
+  E1: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  E2: {'ok': 0, 'nota': 2, 'handoff': 0, 'bloqueo': 0}
+  E3: {'ok': 5, 'nota': 4, 'handoff': 0, 'bloqueo': 0}
+  E4: {'ok': 2, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  E5: {'ok': 0, 'nota': 3, 'handoff': 0, 'bloqueo': 0}
+  E6: {'ok': 1, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  E7: {'ok': 4, 'nota': 2, 'handoff': 0, 'bloqueo': 0}
+  E8: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  E9: {'ok': 1, 'nota': 3, 'handoff': 0, 'bloqueo': 0}
+  E_ANCLA: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas economicas:
+  brecha_h: $850000 vs $850.000 -> diff=$0
+  brecha_m: $100000 vs $100.000 -> diff=$0
+  ratio: 8.50:1 vs 8.5:1 -> diff=0.000
+  psa_h: $215687.5 vs $215.688 -> diff=$0.5
+  psa_m: $277312.5 vs $277.312 -> diff=$0.5
+
+xlsx escrito: audit\fase1\economica.xlsx
