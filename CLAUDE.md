@@ -39,6 +39,18 @@ Jerarquía: microdatos > tesis > código.
 Si microdatos y tesis divergen: escribir questions/NNN_divergencia.md, no corregir en silencio.
 </sources>
 
+<dataset_versioning>
+Las cifras hardcodeadas en data.tsx provienen del dataset usado en la tesis publicada (Velásquez, Palacio, Álvarez 2025). El xlsx en data_source/ puede estar más actualizado y diferir en muestras pequeñas (n<30) por:
+- Casos agregados o reclasificados después del cierre de la tesis
+- Correcciones de captura aplicadas post-publicación
+
+Política: el dashboard mantiene fidelidad con la tesis publicada (documento académico oficial). Si una cifra reconcilia parcialmente con microdatos actuales — algunas categorías exactas, otras desplazadas en muestras pequeñas — declarar "version-locked to thesis dataset", no bug. Mantener la fórmula correcta (la que reconcilia con las categorías estables) documentada en el script para trazabilidad reversa.
+
+Caso documentado: S1 Desacople del Incentivo (Social). Cifras 26,7% (C) y 14,8% (D) reconcilian exactamente bajo fórmula correcta (`'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio` cohortado por columna nativa `Fase del Proyecto`); 71,4% (A) y 43,8% (A+B) corresponden a n previo. Decisión 2026-04-18 (questions/008): mantener cifras de tesis.
+
+Lección operativa: privilegiar columnas categóricas nativas del xlsx (`Fase del Proyecto`, `FASE`, `Cohorte_1`) sobre derivaciones manuales desde columnas continuas como `Año_Ingreso`. Las derivaciones manuales producen cohortes distintas a las nativas y disparan falsos bloqueos en la auditoría.
+</dataset_versioning>
+
 <anchors>
 Cifras verificadas contra microdatos. Intocables salvo evidencia nueva:
 - SROI global 2,22:1 (ventana 2022–2023)
@@ -76,6 +88,7 @@ valor_código | valor_real | n | discrepancia | diagnóstico | acción
 - Outlier declarado: ingreso productivo $23.990.000 COP/mes. No eliminar sin trazabilidad.
 - Correlaciones con Likert: Spearman. Reportar ρ y p-value.
 - Proporciones: IC 95% Wilson (n=80). No usar normal approximation.
+- Antes de calcular proporciones sobre categóricas, ejecutar `common.validate_cardinality(series, expected_values=…, declared_n_categories=…)` contra el set declarado en Diccionario_Datos. Reportar valores fuera del set declarado y decidir explícitamente si son afirmativos intensificados, missings, errores de captura o categorías legítimas a incluir. No imputar silenciosamente.
 </statistical_rules>
 
 <visual_rules>
