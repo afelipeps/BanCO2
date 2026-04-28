@@ -1,18 +1,28 @@
 import React from 'react';
 
+interface TooltipPayloadItem {
+  value?: number | string;
+  name?: string;
+  dataKey?: string;
+  color?: string;
+  stroke?: string;
+  fill?: string;
+}
+
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: TooltipPayloadItem[];
   label?: string;
   unit?: string;
 }
 
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, unit = '' }) => {
   if (active && payload && payload.length) {
+    const first = payload[0]!;
     return (
       <div className="bg-slate-950 border border-slate-700 p-3 rounded-lg shadow-xl bg-opacity-95 backdrop-blur-sm min-w-[140px] z-50">
         <p className="text-slate-400 text-[10px] font-bold mb-2 border-b border-slate-800 pb-1 uppercase tracking-wider">
-          {label || payload[0].name}
+          {label || first.name}
         </p>
         {payload.map((entry, index) => (
           <div key={index} className="flex items-center justify-between gap-3 mb-1">
@@ -26,7 +36,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, u
             <span className="text-sm font-bold text-white tabular-nums font-mono">
               {/* Formateo de moneda o unidad estándar */}
               {typeof entry.value === 'number' && (entry.dataKey === 'income' || Math.abs(entry.value) > 1000)
-                ? `$${entry.value.toLocaleString()}` 
+                ? `$${entry.value.toLocaleString()}`
                 : `${entry.value}${unit ? ` ${unit}` : ''}`}
             </span>
           </div>

@@ -74,20 +74,30 @@ const SroiBalanceChart: React.FC<Props> = ({ indicator }) => {
 
             <Tooltip
               cursor={{ fill: 'transparent' }}
-              content={({ active, payload }: any) => {
+              content={(props) => {
+                const { active, payload } = props as unknown as {
+                  active?: boolean;
+                  payload?: ReadonlyArray<{
+                    name?: string;
+                    value?: number;
+                    color?: string;
+                    payload: { name: string; totalFormatted: string };
+                  }>;
+                };
                 if (active && payload && payload.length) {
+                  const first = payload[0]!;
                   return (
                     <div className="bg-slate-900 border border-slate-700 p-3 rounded shadow-xl min-w-[180px] z-50 relative">
-                      <p className="text-white font-bold text-xs mb-2 pb-1 border-b border-slate-700">{payload[0].payload.name}</p>
-                      {payload.map((entry: any, index: number) => (
+                      <p className="text-white font-bold text-xs mb-2 pb-1 border-b border-slate-700">{first.payload.name}</p>
+                      {payload.map((entry, index) => (
                         <div key={index} className="flex items-center justify-between gap-4 text-xs mb-1">
                           <span style={{ color: entry.color }}>{entry.name}:</span>
-                          <span className="font-mono text-slate-200">${entry.value.toLocaleString()}</span>
+                          <span className="font-mono text-slate-200">${entry.value?.toLocaleString()}</span>
                         </div>
                       ))}
                       <div className="border-t border-slate-700 mt-2 pt-2 flex justify-between text-xs font-bold text-white">
                         <span>Total:</span>
-                        <span>${payload[0].payload.totalFormatted}</span>
+                        <span>${first.payload.totalFormatted}</span>
                       </div>
                     </div>
                   );

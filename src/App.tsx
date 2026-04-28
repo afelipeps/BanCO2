@@ -6,10 +6,10 @@ import {
 import { DATA_SOURCE_OF_TRUTH } from '@/data';
 import IndicatorRenderer from '@/components/IndicatorRenderer';
 import StoryBox from '@/components/StoryBox';
-import type { Indicator } from '@/types';
+import type { Indicator, SectionKey } from '@/types';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('geografia');
+  const [activeTab, setActiveTab] = useState<SectionKey>('geografia');
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export default function App() {
     }
   }, [activeTab]);
 
-  const menuItems = [
+  const menuItems: Array<{ id: SectionKey; label: string; icon: typeof Map }> = [
     { id: 'geografia', label: '1. Geografía', icon: Map },
     { id: 'poblacion', label: '2. Población', icon: Users },
     { id: 'ambiental', label: '3. Ambiental', icon: Leaf },
@@ -47,7 +47,7 @@ export default function App() {
     { id: 'economica', label: '5. Economía', icon: DollarSign },
     { id: 'gobernanza', label: '6. Gobernanza', icon: Scale },
     { id: 'sostenibilidad', label: '7. Sostenibilidad', icon: InfinityIcon },
-    { id: 'sroi', label: '8. SROI', icon: Calculator }, 
+    { id: 'sroi', label: '8. SROI', icon: Calculator },
   ];
 
   const currentCategory = DATA_SOURCE_OF_TRUTH[activeTab];

@@ -24,7 +24,11 @@ const BarHorizontal: React.FC<Props> = ({ indicator }) => {
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color || entry.fill || COLORS[index % COLORS.length]} />
             ))}
-            <LabelList dataKey="value" position="right" fill="#94a3b8" fontSize={10} formatter={(val: number | string) => typeof val === 'number' ? (val < 1000 ? val : `$${(val).toLocaleString()}`) : val} />
+            <LabelList dataKey="value" position="right" fill="#94a3b8" fontSize={10} formatter={(val) => {
+              if (val == null) return '';
+              if (typeof val === 'number') return val < 1000 ? String(val) : `$${val.toLocaleString()}`;
+              return String(val);
+            }} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

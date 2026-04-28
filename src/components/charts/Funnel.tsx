@@ -23,7 +23,7 @@ const Funnel: React.FC<Props> = ({ indicator }) => {
           >
             {/* UX FIX: Etiquetas externas claras y valor interno destacado */}
             <LabelList position="right" fill="#94a3b8" stroke="none" dataKey="name" fontSize={11} />
-            <LabelList position="center" fill="#ffffff" stroke="none" dataKey="value" fontSize={14} fontWeight="bold" formatter={(val: number) => `${val}%`} />
+            <LabelList position="center" fill="#ffffff" stroke="none" dataKey="value" fontSize={14} fontWeight="bold" formatter={(val) => val == null ? '' : `${val}%`} />
           </RFunnel>
         </FunnelChart>
       </ResponsiveContainer>
