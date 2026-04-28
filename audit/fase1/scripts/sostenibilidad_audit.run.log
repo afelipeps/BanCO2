@@ -11,7 +11,7 @@ filas_resumen=16 indicadores=6
   ST1: {'ok': 0, 'nota': 1, 'handoff': 2, 'bloqueo': 0}
   ST2: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
   ST3: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
-  ST4: {'ok': 0, 'nota': 0, 'handoff': 3, 'bloqueo': 0}
+  ST4: {'ok': 0, 'nota': 3, 'handoff': 0, 'bloqueo': 0}
   ST5: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
   ST6: {'ok': 5, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
 

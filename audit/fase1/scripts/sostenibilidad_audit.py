@@ -766,6 +766,25 @@ def main() -> int:
     )
 
     # ========================================================================
+    # [VERSION-LOCK-OVERRIDE] post-proceso (2026-04-28)
+    # ST4 Fricción Operativa: q010 cerrada con override (fuente Gráficas rows 230-234,
+    #   codificación tesis-time multi-select 140 menciones / 80 familias).
+    # Downgrade severidad handoff→nota con flag explícito.
+    # Ver CLAUDE.md sección <dataset_versioning> para definición de [VERSION-LOCK-OVERRIDE].
+    # ========================================================================
+    VERSION_LOCK_OVERRIDE_INDICATORS = {
+        "ST4": "questions/closed/010_resolved.md",
+    }
+    for r in resultados:
+        if r.id_indicador in VERSION_LOCK_OVERRIDE_INDICATORS and r.severidad == "handoff":
+            ref = VERSION_LOCK_OVERRIDE_INDICATORS[r.id_indicador]
+            r.severidad = "nota"
+            r.notas = (
+                f"[VERSION-LOCK-OVERRIDE handoff→nota — {ref} cerrada 2026-04-28] "
+                + (r.notas or "")
+            )
+
+    # ========================================================================
     # Output
     # ========================================================================
     write_excel(resultados, metodo, OUT_XLSX, accion_map=ACCION_MAP, handoff_map=HANDOFF_MAP)

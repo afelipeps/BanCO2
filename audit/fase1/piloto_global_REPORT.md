@@ -4,7 +4,7 @@
 
 ## Resumen ejecutivo
 
-La auditoría Fase 1 cubrió **51 indicadores** a lo largo de **7 secciones** (**173 filas Resumen** en total). Tras aplicar D6 swap (E3 incentivo medio sobre n=134 Familia Campesina), [VERSION-LOCK-OVERRIDE] (E2/E5/E9/ST4/SROI), y verificación SROI vs Apéndice 1 tesis, el conteo final es: **0 bloqueos**, **128 ok / 27 nota / 18 handoff**. **60 filas violan `<visual_rules>`** (35%, deuda visual a resolver en Fase 4 con 10 issues queued en `backlog/fase4_visuales.md`).
+La auditoría Fase 1 cubrió **51 indicadores** a lo largo de **7 secciones** (**173 filas Resumen** en total). Tras aplicar D6 swap (E3 incentivo medio sobre n=134 Familia Campesina), [VERSION-LOCK-OVERRIDE] (E2/E5/E9/ST4/SROI), y verificación SROI vs Apéndice 1 tesis, el conteo final es: **0 bloqueos**, **128 ok / 30 nota / 15 handoff**. **60 filas violan `<visual_rules>`** (35%, deuda visual a resolver en Fase 4 con 10 issues queued en `backlog/fase4_visuales.md`).
 
 La metodología en `common.py` resistió 7 sub-agentes paralelos sin cambios estructurales mayores (sólo se agregó `validate_cardinality` post-q009). El nuevo concepto **[VERSION-LOCK-OVERRIDE]** se incorporó al CLAUDE.md `<dataset_versioning>` para casos donde la fuente documental existe pero la fórmula no reproduce con cuts simples (override de C1 por trazabilidad documental).
 
@@ -18,10 +18,10 @@ La metodología en `common.py` resistió 7 sub-agentes paralelos sin cambios est
 | Social (post-q008/q009) | 10 | 25 | 8 | 20 | 3 | 2 | 0 | 7 |
 | Gobernanza | 8 | 19 | 14 | 15 | 2 | 2 | 0 | 14 |
 | Económica (post-D6 + V-L-O) | 10 | 37 | 9 | 21 | 15 | 1 | 0 | 8 |
-| Sostenibilidad | 6 | 16 | 6 | 10 | 1 | 5 | 0 | 3 |
-| **Total Fase 1** | **51** | **173** | **68** | **128** | **27** | **18** | **0** | **60** |
+| Sostenibilidad (post-V-L-O ST4) | 6 | 16 | 6 | 10 | 4 | 2 | 0 | 3 |
+| **Total Fase 1** | **51** | **173** | **68** | **128** | **30** | **15** | **0** | **60** |
 
-Ratio reconciliación (ok+nota): **89,6%** (155/173). **Cero bloqueos finales.**
+Ratio reconciliación (ok+nota): **91,3%** (158/173). **Cero bloqueos finales.**
 Ratio viz_viola_rules: **34,7%** (60/173) — deuda diferida a Fase 4.
 
 > **Nota PC3**: 173 filas vs 175 esperadas. Discrepancia en Social (-4 filas: 25 vs 29 que reportaba estimación pre-q008/q009). El refactor de S1 cohortado por `Fase del Proyecto` nativa consolidó subgrupos. Conteo real es 173.
@@ -30,11 +30,11 @@ Ratio viz_viola_rules: **34,7%** (60/173) — deuda diferida a Fase 4.
 
 ### Media 104,6 ha/familia vs mediana 5,1 ha (Territorial + Ambiental)
 
-Hallazgo transversal G2/A1: ancla 104,6 ha es media muestral con outlier de 6.379 ha; mediana real es 5,095 ha/familia (IQR [2,36; 11,63]). Documentado en [questions/005](../../questions/005_g2_scatter_sintetico.md) — resuelto Opción A (boxplot+strip plot Fase 4 + ancla mediana 5,095).
+Hallazgo transversal G2/A1: ancla 104,6 ha es media muestral con outlier de 6.379 ha; mediana real es 5,095 ha/familia (IQR [2,36; 11,63]). Documentado en [questions/005](../../questions/closed/005_g2_scatter_sintetico.md) — resuelto Opción A (boxplot+strip plot Fase 4 + ancla mediana 5,095).
 
 ### Desacople del Incentivo S1 — version-locked to thesis dataset
 
-Los 3 bloqueos originales en S1 fueron resueltos empíricamente con decisión académica ([questions/008](../../questions/008_s1_desacople_incentivo_bloqueos.md)). Cohortado por `Fase del Proyecto` nativa, bienestar_C y bienestar_D reconcilian exactamente bajo fórmula `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio`. Subgrupos A y A+B corresponden a tesis publicada — version-lock estándar (NO override).
+Los 3 bloqueos originales en S1 fueron resueltos empíricamente con decisión académica ([questions/008](../../questions/closed/008_s1_desacople_incentivo_bloqueos.md)). Cohortado por `Fase del Proyecto` nativa, bienestar_C y bienestar_D reconcilian exactamente bajo fórmula `'Mucho mejor'` sobre `3.1_Bienestar_Economico_Cambio`. Subgrupos A y A+B corresponden a tesis publicada — version-lock estándar (NO override).
 
 ### Ancla "Continuaría sin pago: 100%" — confirmada (q009)
 
@@ -72,21 +72,23 @@ Severidades downgrade `bloqueo` → `nota` con flag explícito. Disclosure metad
 
 Reconciliación al peso COP de inputs/outputs. SR1 (Asimetría de Beneficios) reconcilia 100% exacto en 4 grupos: Familias 948.200.400 / Medioambiente 1.851.776.000 / Estado 1.119.600.000 / Mujeres 6.526.728. Total outputs 3.926.103.128. Total inputs 1.765.929.034. Ratio 2,22:1 ✓. SR2 (Matriz Evidencia) reconcilia NV en 6/6 filas; **3 discrepancias menores de etiquetado SROI** detectadas (N1: AT 63% vs 65% Estado, N2: DR no capturado Mujeres, N3: DW vs DESP swapped Familias Emprendedoras). Documentado en [`sroi_REPORT.md`](sroi_REPORT.md). 0 bloqueos. Las 3 discrepancias son ajustes cosméticos queue Fase 4.
 
-## Questions tracked — 13 total
+## Questions tracked — 13 total (todas cerradas)
 
-### Resueltas en Tiempo 1+2 (9, en `questions/`)
+> **Nota convención**: questions 001-009 (Tiempo 1+2) movidas retroactivamente a `questions/closed/` (commit `fix(audit-p1)` 2026-04-28) para alinear con la convención introducida en Tiempo 3. Convención `questions/` para abiertas y `questions/closed/` para resueltas se mantiene para Fase 2 en adelante.
+
+### Resueltas en Tiempo 1+2 (9, en `questions/closed/`)
 
 | # | Sección | Tema | Estado |
 |---|---|---|---|
-| [001](../../questions/001_piramide_ejes_simetricos.md) | Población | P3 pirámide ECharts ejes simétricos | Resuelta Opción A |
-| [002](../../questions/002_kpi_edad_media_vs_mediana.md) | Población | P4 KPI mediana 60 + IQR | Resuelta tentativa A |
-| [003](../../questions/003_rangos_etarios_p3.md) | Población | Bins etarios normalizados | Resuelta Opción A |
-| [004](../../questions/004_pagos_n_141_vs_148.md) | Global | Pagos n=141 vs ancla 148 | Resuelta Opción A con matización |
-| [005](../../questions/005_g2_scatter_sintetico.md) | Territorial+Ambiental | G2 scatter sintético | Resuelta Opción A |
-| [006](../../questions/006_g4_labels_fase_d.md) | Territorial | G4 labels temporales | Resuelta Opción A |
-| [007](../../questions/007_g5_mapping_pisos_termicos.md) | Territorial | G5 variable no trazable | Resuelta Opción B + plan A |
-| [008](../../questions/008_s1_desacople_incentivo_bloqueos.md) | Social | S1 3 bloqueos | Resuelta empíricamente — version-locked |
-| [009](../../questions/009_ancla_continuaria_sin_pago.md) | Social | Ancla 100% vs 98,75% | Resuelta empíricamente — ancla 100% |
+| [001](../../questions/closed/001_piramide_ejes_simetricos.md) | Población | P3 pirámide ECharts ejes simétricos | Resuelta Opción A |
+| [002](../../questions/closed/002_kpi_edad_media_vs_mediana.md) | Población | P4 KPI mediana 60 + IQR | Resuelta tentativa A |
+| [003](../../questions/closed/003_rangos_etarios_p3.md) | Población | Bins etarios normalizados | Resuelta Opción A |
+| [004](../../questions/closed/004_pagos_n_141_vs_148.md) | Global | Pagos n=141 vs ancla 148 | Resuelta Opción A con matización |
+| [005](../../questions/closed/005_g2_scatter_sintetico.md) | Territorial+Ambiental | G2 scatter sintético | Resuelta Opción A |
+| [006](../../questions/closed/006_g4_labels_fase_d.md) | Territorial | G4 labels temporales | Resuelta Opción A |
+| [007](../../questions/closed/007_g5_mapping_pisos_termicos.md) | Territorial | G5 variable no trazable | Resuelta Opción B + plan A |
+| [008](../../questions/closed/008_s1_desacople_incentivo_bloqueos.md) | Social | S1 3 bloqueos | Resuelta empíricamente — version-locked |
+| [009](../../questions/closed/009_ancla_continuaria_sin_pago.md) | Social | Ancla 100% vs 98,75% | Resuelta empíricamente — ancla 100% |
 
 ### Cerradas en Tiempo 3 (4, en `questions/closed/`)
 
@@ -103,9 +105,12 @@ Reconciliación al peso COP de inputs/outputs. SR1 (Asimetría de Beneficios) re
 
 ### PC1 — Cobertura validate_cardinality
 
-**ECO**: 3/3 categóricas críticas validadas. 1 deuda residual (`5.2.6_Genera_Empleo_SiNo` sin cardinalidad declarada en Diccionario_Datos; datos limpios pero falta declaración).
-**SOST**: 3/3 categóricas validadas con Diccionario o fuente documental (hoja Motivación).
-**Cobertura efectiva: 6/6 sin re-ejecución necesaria.** Detalle en anexos de `economica_REPORT.md` y `sostenibilidad_REPORT.md`.
+- **ECO**: 3/3 categóricas **no version-locked** evaluadas: `5.2.1_Tiene_Proyecto_Productivo_SiNo`, `5.2.6_Genera_Empleo_SiNo`, `1.6_Sexo`.
+- **SOST**: 3/3 categóricas evaluadas: `6.3_Orgullo_Ser_Parte`, `6.4_Continuaria_Sin_Pago`, `6.1_Lo_Mas_Valioso_Programa` (vía hoja Motivación).
+- **Categóricas en [VERSION-LOCK-OVERRIDE] excluidas del check**: derivadas tesis-time de E2/E5/E7/E8/E9 y ST4. Cardinalidad fijada por tesis (hoja `Gráficas`, recodificación manual), no por `Diccionario_Datos`. `validate_cardinality` NO aplicable a estas — el override por trazabilidad documental sustituye el check estadístico.
+- **Deuda residual documentada**: `5.2.6_Genera_Empleo_SiNo` sin cardinalidad declarada en `Diccionario_Datos`; valores observados (Sí/No) validados manualmente. Sugerido agregar entrada al Diccionario en próxima revisión.
+
+**Cobertura efectiva**: 6/6 categóricas críticas validadas, sin re-ejecución necesaria. Detalle en anexos de [`economica_REPORT.md`](economica_REPORT.md) y [`sostenibilidad_REPORT.md`](sostenibilidad_REPORT.md).
 
 ### PC2 — Trazabilidad outlier $23.990.000
 

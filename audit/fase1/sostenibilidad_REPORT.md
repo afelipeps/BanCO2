@@ -21,11 +21,11 @@ Sostenibilidad es la sección con mejor reconciliación cuantitativa de Tiempo 3
 | ST1 | Índice de Orgullo | chart_pie 98/2 | `6.3_Orgullo_Ser_Parte` | 1 nota + 2 handoff |
 | ST2 | Continuidad Sin Pago | kpi_card 100% | `6.4_Continuaria_Sin_Pago` (q009) | 1 ok |
 | ST3 | Matriz Estratégica | text_matrix | externa (tesis FODA) | 1 ok |
-| ST4 | Fricción Operativa | bar_h 48,57/33,57/17,86 | **irreproducible** | 3 handoff |
+| ST4 | Fricción Operativa | bar_h 48,57/33,57/17,86 | hoja Gráficas rows 230-234 (q010 cerrada V-L-O) | 3 nota [VERSION-LOCK-OVERRIDE] |
 | ST5 | Motivación Principal | chart_pie 64,9/26,0/9,1 | hoja `Motivación` (n=77) | 3 ok |
 | ST6 | Confianza vs Puntualidad | scatter r=0,54 | `4.2 × 3.5` (n=79) | 5 ok |
 
-**Total**: 16 filas en Resumen sobre 6 indicadores. **11 ok / 1 nota / 5 handoff / 0 bloqueo**.
+**Total**: 16 filas en Resumen sobre 6 indicadores. **10 ok / 4 nota / 2 handoff / 0 bloqueo** (post-fix V-L-O ST4 aplicado 2026-04-28).
 
 ## Hallazgos por indicador
 
@@ -169,18 +169,18 @@ Documentado en [`_findings/h1_bias_intra_respondiente_2_2.md`](_findings/h1_bias
 
 - `tipo_stat="conteo"` sin `valor_real` (NaN), severidad ok, viz_viola_rules=False. Componente `text_matrix` aceptable para FODA narrativo.
 
-## Severidades (output `summarize_severities`)
+## Severidades (output `summarize_severities`, post-V-L-O ST4)
 
 ```
-ST1: {'ok': 0, 'nota': 1, 'handoff': 2, 'bloqueo': 0}   # rounding 98% / contaminación cross-column
+ST1: {'ok': 0, 'nota': 1, 'handoff': 2, 'bloqueo': 0}   # rounding 98% / contaminación cross-column (queue Fase 4 D3)
 ST2: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}   # ancla 100% confirmada (q009 normalización)
 ST3: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}   # cualitativo
-ST4: {'ok': 0, 'nota': 0, 'handoff': 3, 'bloqueo': 0}   # fuente irreproducible (q010)
+ST4: {'ok': 0, 'nota': 3, 'handoff': 0, 'bloqueo': 0}   # [VERSION-LOCK-OVERRIDE] q010 fuente Gráficas rows 230-234
 ST5: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}   # reconciliación exacta hoja Motivación
 ST6: {'ok': 5, 'nota': 0, 'handoff': 0, 'bloqueo': 0}   # reconciliación exacta r/R²/intercept/slope
 ```
 
-**Total**: 11 ok / 1 nota / **5 handoff** / 0 bloqueo.
+**Total**: 10 ok / 4 nota / **2 handoff** / 0 bloqueo. Los 2 handoff residuales son ST1_*_strict (cosmético 1,75 pp por contaminación cross-column) — queue Fase 4 D3 (reagrupar formalmente en 2 categorías + reemplazar `chart_pie` por `proporcion_wilson_bar`).
 
 ## Recomendación
 
