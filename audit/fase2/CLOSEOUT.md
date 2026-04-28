@@ -157,13 +157,50 @@ El número 18 del plan venía contando los handlers del switch monolítico, no l
 - [ ] `/ultrareview` ejecutado — **acción del usuario**, billing del usuario
 - [ ] Push a `refactor/v2` con preview Vercel funcional — **acción del usuario** tras /ultrareview
 
-## Próximos pasos
+## Próximos pasos (orden estricto, gates inter-paso)
 
-1. **Usuario**: ejecutar `/ultrareview` sobre el branch actual.
-2. **Usuario**: si /ultrareview no flagea P0/P1, hacer push a `origin/refactor/v2`.
-3. **Vercel**: deploy preview se genera automáticamente. Validar smoke en 8 tabs sobre desktop + mobile.
-4. **Usuario**: medir Lighthouse mobile sobre el preview deploy. Reportar mediana de 3 corridas.
-5. **Decisión humana**: si todos los gates verdes, considerar merge a main. Antes: definir Fase 3 (decisión stack visual — recharts vs ECharts vs ambos para boxplot/heatmap/pirámide).
+### Paso 1 — /ultrareview local
+**Acción**: usuario ejecuta `/ultrareview` sobre refactor/v2.
+**Gate**: 0 P0/P1 flags. Si hay P1: resolver antes de paso 2.
+**Si pasa**: continuar paso 2.
+
+### Paso 2 — Push a origin/refactor/v2
+**Acción**: usuario ejecuta `git push origin refactor/v2`.
+**Resultado esperado**: Vercel deploy preview generado automáticamente.
+**Gate**: build de Vercel exitoso (verificar dashboard Vercel).
+**Si falla**: abrir question/014 con log de Vercel.
+
+### Paso 3 — Smoke visual en preview
+**Acción**: validar las 8 tabs sobre desktop + mobile en preview URL.
+**Cobertura mínima**: cargar cada tab, verificar que renderiza sin errores en DevTools console.
+**Gate**: 0 errores rojos en console por tab. Warnings amarillos OK.
+**Si falla**: documentar en question/015, NO mergear.
+
+### Paso 4 — axe-core retroactivo (gate informativo, NO bloqueante)
+**Acción**: 1 corrida axe-core sobre preview URL home.
+**Comparación**: contra equivalente sobre Vercel main (commit 3d50da2).
+**Gate**: delta violations ≤ 0 (F2 no debe regresar a11y).
+**Si delta > 0**: documentar en question/016 antes de merge. Si las violations son del refactor estructural (no de los visuales que F4 tocará), bloquear merge hasta resolver.
+
+Cómo correr:
+```bash
+npx playwright test audit/baseline/axe_smoke.mjs --url <preview-url>
+```
+(crear `audit/baseline/axe_smoke.mjs` si no existe — usar `@axe-core/playwright`)
+
+### Paso 5 — Lighthouse mobile sobre preview
+**Acción**: 3 corridas Lighthouse mobile, reportar mediana.
+**Baseline F0 (ref)**: Performance 46, Accessibility 94, LCP 4.239 ms.
+**Gates**:
+- Performance ≥ 40 (tolerancia -6 puntos vs F0)
+- LCP ≤ 4.500 ms (tolerancia +6% vs F0)
+- Accessibility ≥ 94 (no regresar)
+**Si falla cualquier gate**: documentar en question/017, NO mergear.
+
+### Paso 6 — Decisión merge a main
+**Pre-condición**: pasos 1-5 todos verdes.
+**Acción**: PR refactor/v2 → main, merge.
+**Tras merge**: arrancar Fase 3 (decisión stack visual — recharts vs ECharts vs ambos para boxplot/heatmap/pirámide).
 
 ## Atribución
 
