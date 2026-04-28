@@ -3,10 +3,10 @@ import {
   Map, Users, Leaf, Heart, DollarSign, 
   Scale, Infinity as InfinityIcon, Menu, Calculator, X
 } from 'lucide-react';
-import { DATA_SOURCE_OF_TRUTH } from './data';
-import IndicatorRenderer from './components/IndicatorRenderer';
-import StoryBox from './components/StoryBox';
-import { Indicator } from './types';
+import { DATA_SOURCE_OF_TRUTH } from '../data';
+import IndicatorRenderer from '../components/IndicatorRenderer';
+import StoryBox from '../components/StoryBox';
+import { Indicator } from '../types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('geografia');
