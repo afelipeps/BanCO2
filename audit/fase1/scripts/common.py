@@ -226,6 +226,89 @@ def spearman(x: pd.Series, y: pd.Series) -> dict:
     return {"rho": float(rho), "pvalue": float(pval), "n_pairs": int(mask.sum())}
 
 
+def validate_cardinality(
+    series: pd.Series,
+    expected_values: list[str] | set[str] | None = None,
+    declared_n_categories: int | None = None,
+    case_insensitive: bool = True,
+    strip: bool = True,
+) -> dict:
+    """Valida cardinalidad de una columna categórica contra valores esperados.
+
+    Reporta valores únicos observados, valores fuera del set declarado, conteo
+    de casos atípicos y proporción. Usar antes de calcular proporciones sobre
+    categóricas para detectar variantes ortográficas (mayúsculas, espacios,
+    acentos, sinónimos como 'Mucho' donde se espera 'Sí').
+
+    Caso típico (Q009): la columna `6.4_Continuaria_Sin_Pago` debería tener
+    cardinalidad 2 ('Sí'/'No') pero contiene 'Mucho' como tercera categoría —
+    `validate_cardinality(series, expected_values={'Sí','No'}, declared_n_categories=2)`
+    detectaría esa anomalía y exigiría decisión humana antes de cuantificar.
+
+    Parámetros:
+    - series: pd.Series con la columna a auditar.
+    - expected_values: set de valores válidos. Si None, sólo reporta los únicos.
+    - declared_n_categories: cardinalidad declarada en Diccionario_Datos.
+    - case_insensitive: normalizar a minúsculas antes de comparar (default True).
+    - strip: quitar espacios laterales antes de comparar (default True).
+
+    Retorna dict:
+    {
+      'unique_observed': list[str],       # valores únicos en el dato
+      'expected': list[str] | None,
+      'declared_n_categories': int | None,
+      'observed_n_categories': int,
+      'cardinality_match': bool | None,   # observed_n_cat == declared_n_cat
+      'outlier_values': list[str],        # valores no en expected_values
+      'n_outlier_rows': int,
+      'p_outlier': float,
+      'n_total': int,
+      'n_missing': int,
+    }
+    """
+    s = series.copy()
+    n_total = len(s)
+    n_missing = int(s.isna().sum())
+    s_clean = s.dropna().astype(str)
+    if strip:
+        s_clean = s_clean.str.strip()
+    s_compare = s_clean.str.lower() if case_insensitive else s_clean
+
+    unique_observed = sorted(set(s_clean.tolist()))
+    observed_n_categories = len(set(s_compare.tolist()))
+
+    expected_set: set[str] | None = None
+    outlier_values: list[str] = []
+    n_outlier_rows = 0
+    if expected_values is not None:
+        norm = (lambda x: x.strip().lower()) if (case_insensitive and strip) else (
+            (lambda x: x.lower()) if case_insensitive else (
+                (lambda x: x.strip()) if strip else (lambda x: x)
+            )
+        )
+        expected_set = {norm(v) for v in expected_values}
+        outlier_mask = ~s_compare.isin(expected_set)
+        outlier_values = sorted(set(s_clean[outlier_mask].tolist()))
+        n_outlier_rows = int(outlier_mask.sum())
+
+    cardinality_match: bool | None = None
+    if declared_n_categories is not None:
+        cardinality_match = observed_n_categories == declared_n_categories
+
+    return {
+        "unique_observed": unique_observed,
+        "expected": sorted(expected_values) if expected_values is not None else None,
+        "declared_n_categories": declared_n_categories,
+        "observed_n_categories": observed_n_categories,
+        "cardinality_match": cardinality_match,
+        "outlier_values": outlier_values,
+        "n_outlier_rows": n_outlier_rows,
+        "p_outlier": (n_outlier_rows / max(len(s_clean), 1)) if expected_set is not None else 0.0,
+        "n_total": n_total,
+        "n_missing": n_missing,
+    }
+
+
 # ----------------------------------------------------------------------------
 # Schema de resultado
 # ----------------------------------------------------------------------------
@@ -410,6 +493,18 @@ if __name__ == "__main__":
     # diff_props_ci sanity: 0.79 vs 0.94 con n=33 y n=47
     lo, hi = diff_props_ci(26, 33, 44, 47)
     assert lo < (26 / 33 - 44 / 47) < hi
+
+    # validate_cardinality: caso conocido Q009 — 'Mucho' como tercera categoría
+    # cuando el dictionary documenta binaria 'Sí'/'No'.
+    s_test = pd.Series(["Sí"] * 79 + ["Mucho"])  # 79 Sí + 1 Mucho
+    vc = validate_cardinality(s_test, expected_values={"Sí", "No"}, declared_n_categories=2)
+    assert vc["observed_n_categories"] == 2, vc
+    assert vc["cardinality_match"] is True, vc  # 'Mucho' y 'Sí' son 2 únicos
+    assert vc["n_outlier_rows"] == 1, vc        # 'Mucho' fuera del set esperado
+    assert vc["outlier_values"] == ["Mucho"], vc
+    # Mismo dato pero declarando set ampliado (Sí/No/Mucho) → 0 outliers
+    vc2 = validate_cardinality(s_test, expected_values={"Sí", "No", "Mucho"})
+    assert vc2["n_outlier_rows"] == 0, vc2
 
     # Conexión DuckDB: n=80 en datos (ancla verificada Fase 0)
     con = get_connection()
