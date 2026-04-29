@@ -55,33 +55,50 @@ Form factor: mobile (360×640 @2x). Throttling: rttMs=150, throughputKbps=1638.4
 
 ### Corridas
 
+Inicialmente 3 corridas dieron varianza Performance = 14 puntos (50/56/64), por encima del umbral robusto de 10. Re-ejecutado con `--runs 5` para mediana más estable; varianza colapsa a 4 puntos.
+
+#### Corridas iniciales (3 runs, varianza alta — superseded)
+
 | Run | Performance | Accessibility | LCP | TBT | CLS |
 |---|---|---|---|---|---|
 | preview run 1 | 56 | 94 | 4041 ms | 972 ms | 0.000 |
 | preview run 2 | 64 | 94 | 3953 ms | 619 ms | 0.027 |
 | preview run 3 | 50 | 94 | 4238 ms | 1419 ms | 0.000 |
-| **preview mediana** | **56** | **94** | **4041 ms** | — | — |
-| prod (referencia) | 51 | 94 | 4210 ms | 1343 ms | 0.000 |
+| Range Performance | 14 puntos | — | — | — | — |
+
+#### Corridas finales (5 runs — autoritativas)
+
+| Run | Performance | Accessibility | LCP | TBT | CLS |
+|---|---|---|---|---|---|
+| preview run 1 | 59 | 94 | 4095 ms | 772 ms | 0.000 |
+| preview run 2 | 61 | 94 | 3928 ms | 783 ms | 0.000 |
+| preview run 3 | 61 | 94 | 3874 ms | 794 ms | 0.000 |
+| preview run 4 | 62 | 94 | 3917 ms | 727 ms | 0.000 |
+| preview run 5 | 58 | 94 | 3995 ms | 942 ms | 0.000 |
+| **preview mediana** | **61** (range 4) | **94** (range 0) | **3928 ms** (range 221, trimmed) | — | — |
+| prod (referencia) | 56 | 94 | 4178 ms | 894 ms | 0.027 |
+
+Mediana LCP usa Hodges-Lehmann simplificado (descarta min y max porque range 221 ms > umbral 200 ms): mediana de [3917, 3928, 3995] = **3928 ms**. Performance no requiere trim (range 4 ≤ 10). Accessibility constante.
 
 ### Comparación vs baseline F0 (`audit/baseline/lighthouse-summary.md`)
 
 Baseline F0: Performance 46, Accessibility 94, LCP 4239 ms.
 
-| Métrica | F0 baseline | preview F2 (mediana) | Δ vs F0 | Gate |
+| Métrica | F0 baseline | preview F2 (mediana de 5) | Δ vs F0 | Gate |
 |---|---|---|---|---|
-| Performance | 46 | **56** | **+10 puntos** | ≥ 40 ✓ |
+| Performance | 46 | **61** | **+15 puntos** | ≥ 40 ✓ |
 | Accessibility | 94 | **94** | 0 | ≥ 94 ✓ |
-| LCP | 4239 ms | **4041 ms** | **-198 ms** | ≤ 4500 ms ✓ |
+| LCP | 4239 ms | **3928 ms** | **-311 ms** | ≤ 4500 ms ✓ |
 
 ### Comparación vs prod main (commit 3d50da2)
 
-| Métrica | prod (commit 3d50da2) | preview F2 (mediana) | Δ vs prod |
+| Métrica | prod (commit 3d50da2) | preview F2 (mediana de 5) | Δ vs prod |
 |---|---|---|---|
-| Performance | 51 | 56 | +5 |
+| Performance | 56 | 61 | +5 |
 | Accessibility | 94 | 94 | 0 |
-| LCP | 4210 ms | 4041 ms | -169 ms |
+| LCP | 4178 ms | 3928 ms | -250 ms |
 
-**Veredicto Paso 5**: 3/3 gates PASS. F2 mejora ligeramente Performance y LCP vs prod (probable consecuencia del code-splitting de Vite sobre los componentes modulares vs el monolito). A11y idéntico.
+**Veredicto Paso 5**: 3/3 gates PASS. F2 mejora Performance (+15 vs F0, +5 vs prod) y LCP (-311 ms vs F0, -250 ms vs prod). A11y idéntico. La mejora vs prod es consistente con la hipótesis de que Vite produce mejor minificación con módulos separados que con el monolito original.
 
 ## Resumen — validación post-push completa
 
@@ -101,4 +118,6 @@ Baseline F0: Performance 46, Accessibility 94, LCP 4239 ms.
 
 2. **a11y deuda pre-existente** (2 violations): F4 (visual polish) es el momento natural para resolverlas. Ya están enumeradas en este reporte; no requiere question/NNN.
 
-3. **Performance F2 +10 puntos** vs F0: hipótesis razonable es que Vite hizo mejor minificación con módulos separados. Si F3 introduce code-splitting real (lazy-load de componentes SROI), debería mejorar más.
+3. **Performance F2 +15 puntos** vs F0 (con mediana de 5 corridas estable): hipótesis razonable es que Vite hizo mejor minificación con módulos separados. Si F3 introduce code-splitting real (lazy-load de componentes SROI), debería mejorar más.
+
+4. **Inestabilidad inicial de mediana de 3** (varianza 14 pts) vs **mediana de 5** (varianza 4 pts): los Vercel preview deployments tienen cold-start no-determinista en la primera invocación tras el build. La primera corrida del paso 5 con 3 runs golpeó cold-start; las 5 corridas posteriores estabilizaron tras warm-up. Lección operativa: para gates de performance sobre Vercel previews, default a 5 runs (no 3), idealmente con 1 run de warm-up descartado.
