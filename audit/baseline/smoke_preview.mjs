@@ -71,18 +71,29 @@ try {
     const errors = [];
     const warnings = [];
     const pageErrors = [];
+    const failedRequests = [];
+    const f2DebtLeaks = []; // si aparece en prod = tree-shake roto
 
     page.on('console', (msg) => {
       const type = msg.type();
       const text = msg.text();
-      // Filtrar el warning [F2-debt] (es nuestro, dev-only — no debería
-      // aparecer en preview pero por las dudas).
-      if (text.includes('[F2-debt]')) return;
+      // [F2-debt] es dev-only. En preview/prod NO debería aparecer
+      // (Vite tree-shakea el bloque if (import.meta.env.DEV)).
+      if (text.includes('[F2-debt]')) {
+        f2DebtLeaks.push(text);
+        return;
+      }
       if (type === 'error') errors.push(text);
       else if (type === 'warning') warnings.push(text);
     });
     page.on('pageerror', (err) => {
       pageErrors.push(err.message);
+    });
+    page.on('requestfailed', (req) => {
+      // Filtrar requests cancelled por navigation (no son "fail" reales)
+      const failure = req.failure()?.errorText ?? '';
+      if (failure.includes('aborted') || failure.includes('canceled')) return;
+      failedRequests.push(`${req.method()} ${req.url()} → ${failure}`);
     });
 
     try {
@@ -98,6 +109,7 @@ try {
       const errSnap = errors.length;
       const warnSnap = warnings.length;
       const peSnap = pageErrors.length;
+      const reqSnap = failedRequests.length;
 
       try {
         await ensureSidebarOpen(page, isMobile);
@@ -109,22 +121,31 @@ try {
         const newErrors = errors.length - errSnap;
         const newWarnings = warnings.length - warnSnap;
         const newPageErrors = pageErrors.length - peSnap;
-        const totalErr = newErrors + newPageErrors;
+        const newFailedReq = failedRequests.length - reqSnap;
+        const totalErr = newErrors + newPageErrors + newFailedReq;
         const status = totalErr === 0 ? 'OK' : 'FAIL';
         const tag = status === 'OK' ? 'OK  ' : 'FAIL';
-        console.log(`${tag} ${section.id.padEnd(15)} ${vp.name.padEnd(8)} err=${totalErr} warn=${newWarnings}`);
+        console.log(`${tag} ${section.id.padEnd(15)} ${vp.name.padEnd(8)} err=${totalErr} warn=${newWarnings} failedReq=${newFailedReq}`);
         results.push({
           section: section.id,
           viewport: vp.name,
           status,
           errors: totalErr,
           warnings: newWarnings,
-          errorMessages: errors.slice(errSnap).concat(pageErrors.slice(peSnap)),
+          failedRequests: newFailedReq,
+          errorMessages: errors.slice(errSnap).concat(pageErrors.slice(peSnap)).concat(failedRequests.slice(reqSnap)),
         });
       } catch (err) {
         console.error(`FAIL ${section.id} ${vp.name}: ${err.message}`);
         results.push({ section: section.id, viewport: vp.name, status: 'FAIL', errors: 1, errorMessages: [err.message] });
       }
+    }
+
+    // Reportar F2-debt leaks por context (debe ser 0 en preview/prod)
+    if (f2DebtLeaks.length > 0) {
+      console.error(`\n[F2-debt LEAK] ${vp.name}: ${f2DebtLeaks.length} ocurrencias detectadas — tree-shake roto:`);
+      f2DebtLeaks.forEach((m) => console.error(`  ${m}`));
+      results.push({ section: '__f2_debt_leak__', viewport: vp.name, status: 'FAIL', errors: f2DebtLeaks.length, errorMessages: f2DebtLeaks });
     }
 
     await context.close();
