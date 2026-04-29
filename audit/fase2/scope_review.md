@@ -117,3 +117,27 @@ El remote /ultrareview reportó `[]` (0 hallazgos) pero su scope es opaco. Esta 
 - `npm run test` → 35/35 pass
 - `npm run build` → OK
 - Bundle delta vs baseline: dentro del gate (verificado en commit fix)
+
+## Deuda residual de la pasada V3 (queue F4)
+
+V3 inspeccionó con profundidad solo: `IndicatorRenderer`, `KpiCard`, `KpiRating`, LabelList formatters (`BarHorizontal`, `Funnel`), Tooltip (`CustomTooltip` y inline de `SroiBalanceChart`). Los 14 componentes restantes (`charts/PieChart`, `BarVertical`, `BarStacked`, `Scatter`, `Radar`, `LineMulti`, `Combo`, `Erosion`, `Correlation`, `tables/WordCountTable`, `TextMatrix`, `sroi/SroiEvidenceTable`, `SroiFutureImpactTable`, plus el resto del JSX de `SroiBalanceChart`) recibieron inspección menos detallada — verifiqué que el JSX externo coincide pero no hice diff char-a-char sobre cada condicional interno.
+
+La conclusión "todo lo demás coincide funcionalmente" es válida con la data actual (visual diff 16/16 PASS) pero **no garantiza ausencia de regresiones latentes similares a la de KpiCard** — branches lógicas que no se activan con los 53 indicadores actuales pueden tener divergencia silenciosa.
+
+**Acción F4**: cuando se modifique cualquier componente split, hacer pasada byte-a-byte contra `git show 3d50da2:components/IndicatorRenderer.tsx` sobre la sección correspondiente del switch original. Especialmente:
+- Componentes con condicionales sobre props string (`.includes`, `.startsWith`)
+- Componentes con styling condicional por valor de data
+- Componentes con formatters que ignoran/transforman cierto rango
+
+**Test de regresión KpiCard NO agregado en commit `734fa7d`** (solo restauración de código). Si F4/F5 toca `KpiCard` o introduce un indicador con `trend` que contiene 'Déficit'/'Riesgo'/'Atención', **agregar test ANTES** de modificar — algo del estilo:
+
+```ts
+// src/components/cards/KpiCard.test.tsx (propuesta F4)
+it("trend con 'Atención' produce icon rojo Y badge gris", () => {
+  // Render con KpiCardIndicator { trend: 'Atención requerida', ... }
+  // Verificar className del icon contiene 'bg-red-400/20'
+  // Verificar className del badge contiene 'border-slate-700' (NO 'border-red-400/30')
+});
+```
+
+El test cierra el contrato byte-a-byte que la corrección actual sostiene solo en código + comentario.
