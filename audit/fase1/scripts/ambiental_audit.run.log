@@ -1,0 +1,13 @@
+filas_resumen=31 indicadores=6
+  A1: {'ok': 0, 'nota': 0, 'handoff': 2, 'bloqueo': 0}
+  A2: {'ok': 5, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  A3: {'ok': 15, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  A4: {'ok': 1, 'nota': 1, 'handoff': 1, 'bloqueo': 0}
+  A5: {'ok': 3, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  A6: {'ok': 0, 'nota': 1, 'handoff': 1, 'bloqueo': 0}
+
+Reconciliacion de anclas (|valor_real - ancla|):
+  A1/media (publicada) vs territorial.area_por_familia_ha (104.6): ok
+  A1/mediana (correcto) vs territorial.area_por_familia_ha (104.6): DIFF=99.5050
+
+xlsx escrito: audit\fase1\ambiental.xlsx

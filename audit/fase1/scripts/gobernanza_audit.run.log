@@ -1,0 +1,16 @@
+filas_resumen=19 indicadores=8
+  GO1: {'ok': 1, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  GO2: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  GO3: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  GO4: {'ok': 0, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  GO5: {'ok': 6, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  GO6: {'ok': 1, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  GO7: {'ok': 0, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  GO8: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas (Gobernanza no tiene anclas numericas en CLAUDE.md).
+  (ninguna)
+
+viola_viz_rules (indicadores): ['GO1', 'GO2', 'GO4', 'GO5', 'GO6', 'GO7'] (filas: 14)
+
+xlsx escrito: audit\fase1\gobernanza.xlsx

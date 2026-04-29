@@ -6,18 +6,31 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "lucide-react": "^0.562.0",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.2",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
+    "@vitest/coverage-v8": "^2.1.9",
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.1.0",
+    "pixelmatch": "^7.1.1",
+    "playwright": "^1.59.1",
+    "pngjs": "^7.0.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^2.1.9"
   }
 }

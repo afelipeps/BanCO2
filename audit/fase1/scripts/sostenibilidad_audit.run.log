@@ -1,0 +1,25 @@
+
+[Hallazgo transversal] ancla 97,5% mejora ambiental:
+  densidad_arb=78/80=97.5%
+  fauna=78/80=97.5%
+  cantidad_agua=78/80=97.5%
+  calidad_agua=78/80=97.5%
+  aire_puro=78/80=97.5%
+  → ancla 97,5% NO es ST5; vive en sección Ambiental.
+
+filas_resumen=16 indicadores=6
+  ST1: {'ok': 0, 'nota': 1, 'handoff': 2, 'bloqueo': 0}
+  ST2: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  ST3: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  ST4: {'ok': 0, 'nota': 3, 'handoff': 0, 'bloqueo': 0}
+  ST5: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  ST6: {'ok': 5, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas:
+  continuaria_sin_pago: 1.0000 vs 1.0000 (ancla) -> ok (q009 normalización)
+  st6_pearson_r:        0.5424 vs 0.54 (codigo)  -> diff 0.0024
+  st6_r_squared:        0.2942 vs 0.29 (codigo)  -> diff 0.0042
+  st6_intercept:        3.4622 vs 3.46 (codigo) -> diff 0.0022
+  st6_slope:            0.3338 vs 0.33 (codigo) -> diff 0.0038
+
+xlsx escrito: audit\fase1\sostenibilidad.xlsx

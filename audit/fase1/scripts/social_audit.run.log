@@ -1,0 +1,17 @@
+filas_resumen=25 indicadores=10
+  S1: {'ok': 3, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  S2: {'ok': 3, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  S3: {'ok': 3, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  S4: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  S5: {'ok': 1, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  S6: {'ok': 1, 'nota': 1, 'handoff': 0, 'bloqueo': 0}
+  S7: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  S8: {'ok': 3, 'nota': 0, 'handoff': 1, 'bloqueo': 0}
+  S9: {'ok': 2, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+  S_ANCLA: {'ok': 1, 'nota': 0, 'handoff': 0, 'bloqueo': 0}
+
+Reconciliacion de anclas (|valor_real - ancla|):
+  jefatura_global: 0.8750 vs 0.8750 -> ok
+  continuaria_sin_pago: 1.0000 vs 1.0000 (ancla) -> ok (questions/009 resuelta: normalizacion categorica)
+
+xlsx escrito: audit\fase1\social.xlsx
