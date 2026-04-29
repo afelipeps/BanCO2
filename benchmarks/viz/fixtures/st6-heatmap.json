@@ -1,0 +1,155 @@
+{
+  "label": "ST6 Confianza × Puntualidad (5×5 Likert)",
+  "n": 79,
+  "xAxis": {
+    "label": "Puntualidad de Pagos",
+    "ticks": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "yAxis": {
+    "label": "Confianza Institucional",
+    "ticks": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "source": "Datos_Normalizados cols 4.2_Puntualidad_Pagos_1a5 × 3.5_Calif_Relacion_Masbosques_Cornare",
+  "transformation": "Tabla cruzada de frecuencias enteras Likert 1-5; null pairs descartados.",
+  "spearmanRho": 0.5617,
+  "spearmanPValue": 3e-06,
+  "matrix": [
+    {
+      "x": 1,
+      "y": 1,
+      "count": 0
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "count": 0
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "count": 0
+    },
+    {
+      "x": 1,
+      "y": 4,
+      "count": 0
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "count": 0
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "count": 0
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "count": 0
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "count": 0
+    },
+    {
+      "x": 2,
+      "y": 4,
+      "count": 0
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "count": 0
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "count": 0
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "count": 0
+    },
+    {
+      "x": 3,
+      "y": 3,
+      "count": 0
+    },
+    {
+      "x": 3,
+      "y": 4,
+      "count": 19
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "count": 13
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "count": 0
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "count": 0
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "count": 0
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "count": 3
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "count": 30
+    },
+    {
+      "x": 5,
+      "y": 1,
+      "count": 0
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "count": 0
+    },
+    {
+      "x": 5,
+      "y": 3,
+      "count": 0
+    },
+    {
+      "x": 5,
+      "y": 4,
+      "count": 0
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "count": 14
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "recharts": {
+    "Boxplot": 175,
+    "Heatmap": 122,
+    "Pyramid": 114,
+    "total3Charts": 411
+  },
+  "echarts": {
+    "Boxplot": 115,
+    "Heatmap": 91,
+    "Pyramid": 92,
+    "total3Charts": 298,
+    "registry": 27
+  },
+  "plotly_smoke": {
+    "Boxplot": 73
+  },
+  "delta_recharts_minus_echarts": 113,
+  "interpretation": "ECharts es ~28% más conciso por API option-as-data; recharts custom requiere setup explícito de ReferenceArea/Line para boxplot/heatmap (sin nativo). Diferencia 113 LOC sobre 3 canarios."
+}

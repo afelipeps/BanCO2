@@ -1,0 +1,105 @@
+{
+  "label": "E4 Brecha género ingreso productivo (COP/mes)",
+  "n": 24,
+  "source": "data_source/BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx hoja Datos_Normalizados cols 1.6_Sexo + 5.2.4_Ingreso_Mensual_Promedio_COP",
+  "transformation": "Filtrado: ingreso > 0 AND sex no nulo. Sin imputación.",
+  "timeWindow": "2017-2024",
+  "points": [
+    {
+      "sex": "H",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 300000
+    },
+    {
+      "sex": "H",
+      "ingreso": 100000
+    },
+    {
+      "sex": "M",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 150000
+    },
+    {
+      "sex": "M",
+      "ingreso": 300000
+    },
+    {
+      "sex": "H",
+      "ingreso": 23990000
+    },
+    {
+      "sex": "M",
+      "ingreso": 60000
+    },
+    {
+      "sex": "H",
+      "ingreso": 1000000
+    },
+    {
+      "sex": "H",
+      "ingreso": 1800000
+    },
+    {
+      "sex": "M",
+      "ingreso": 100000
+    },
+    {
+      "sex": "M",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 900000
+    },
+    {
+      "sex": "H",
+      "ingreso": 13728000
+    },
+    {
+      "sex": "H",
+      "ingreso": 100000
+    },
+    {
+      "sex": "H",
+      "ingreso": 1000000
+    },
+    {
+      "sex": "H",
+      "ingreso": 300000
+    },
+    {
+      "sex": "H",
+      "ingreso": 11666666
+    },
+    {
+      "sex": "H",
+      "ingreso": 1000000
+    },
+    {
+      "sex": "M",
+      "ingreso": 60000
+    },
+    {
+      "sex": "H",
+      "ingreso": 800000
+    },
+    {
+      "sex": "H",
+      "ingreso": 1000000
+    }
+  ]
+}

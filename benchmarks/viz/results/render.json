@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-04-29T22:33:00Z",
+  "method": "performance.mark/measure across 5 tab toggles per stack on http://localhost:4173/. Includes mount + ResponsiveContainer dimensions resolution + any CSS animations.",
+  "samples": {
+    "rechartsRenderMs": [1846, 1933, 1920, 1920, 1924],
+    "echartsRenderMs": [1730, 1921, 1897, 1903, 1892]
+  },
+  "median": {
+    "recharts": 1920,
+    "echarts": 1897
+  },
+  "diff": {
+    "deltaMs": -23,
+    "interpretation": "Within sampling noise. Performance parity for tab-switch cycle on production build."
+  },
+  "heap": {
+    "afterPageLoadMB": 15,
+    "after5CyclesMB": 33,
+    "deltaMB": 18,
+    "note": "Both libs loaded simultaneously; in production only one would be active."
+  }
+}

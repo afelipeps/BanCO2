@@ -1,0 +1,33 @@
+{
+  "label": "P3 Pirámide poblacional",
+  "n": 80,
+  "source": "Datos_Normalizados cols 1.6_Sexo + 1.7_Edad",
+  "transformation": "Bins etarios: <30, 30-44, 45-59, 60-74, ≥75. Solo filas con sexo H/M y edad numérica.",
+  "bins": [
+    {
+      "bin": "<30",
+      "men": 2,
+      "women": 2
+    },
+    {
+      "bin": "30-44",
+      "men": 9,
+      "women": 4
+    },
+    {
+      "bin": "45-59",
+      "men": 9,
+      "women": 12
+    },
+    {
+      "bin": "60-74",
+      "men": 18,
+      "women": 13
+    },
+    {
+      "bin": ">=75",
+      "men": 9,
+      "women": 2
+    }
+  ]
+}

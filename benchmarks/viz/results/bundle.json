@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-04-29T22:25:55.830Z",
+  "baselineRawBytes": 194758,
+  "baselineGzipBytes": 60822,
+  "builds": [
+    {
+      "name": "baseline",
+      "dir": "dist-baseline",
+      "label": "React only (baseline)",
+      "charts": 0,
+      "rawBytes": 194758,
+      "gzipBytes": 60822,
+      "files": 1,
+      "deltaRawBytes": 0,
+      "deltaGzipBytes": 0,
+      "perChartGzipBytes": 0
+    },
+    {
+      "name": "recharts",
+      "dir": "dist-recharts",
+      "label": "Recharts custom (3 charts)",
+      "charts": 3,
+      "rawBytes": 591823,
+      "gzipBytes": 178293,
+      "files": 1,
+      "deltaRawBytes": 397065,
+      "deltaGzipBytes": 117471,
+      "perChartGzipBytes": 39157
+    },
+    {
+      "name": "echarts",
+      "dir": "dist-echarts",
+      "label": "ECharts (3 charts)",
+      "charts": 3,
+      "rawBytes": 791467,
+      "gzipBytes": 259081,
+      "files": 1,
+      "deltaRawBytes": 596709,
+      "deltaGzipBytes": 198259,
+      "perChartGzipBytes": 66086
+    },
+    {
+      "name": "plotly",
+      "dir": "dist-plotly",
+      "label": "Plotly basic-min (1 boxplot smoke)",
+      "charts": 1,
+      "rawBytes": 1311747,
+      "gzipBytes": 443058,
+      "files": 1,
+      "deltaRawBytes": 1116989,
+      "deltaGzipBytes": 382236,
+      "perChartGzipBytes": 382236
+    }
+  ],
+  "gateGzipDeltaTotal": 30720,
+  "gatePlotlyDelta": 512000
+}

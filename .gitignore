@@ -30,6 +30,12 @@ audit/fase1/*.xlsx
 # Benchmarks: artefactos de build
 benchmarks/viz/node_modules/
 benchmarks/viz/dist/
+benchmarks/viz/dist-*/
+benchmarks/viz/package-lock.json
+
+# Playwright MCP outputs (screenshots, snapshots)
+.playwright-mcp/
+*.png
 
 # Windows
 Thumbs.db
