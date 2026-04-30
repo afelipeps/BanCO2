@@ -1,0 +1,101 @@
+========================================================================
+audit/fase3/scripts/defense_d2.py — RUN LOG
+========================================================================
+
+HEADER DE TRAZABILIDAD
+------------------------------------------------------------------------
+  Timestamp UTC      : 2026-04-30T00:08:35Z
+  XLSX path          : data_source\BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx
+  XLSX SHA-256       : b03c9fcdc7a05f65136c89feaf555716489fa1a3214d90763c45172c6155b802
+  Script SHA-256     : 6ce7a48820f19726ffbbc0243b361ac6c6115fac86c4c0714b02f41008c84e0c
+  Python             : 3.14.3
+  numpy              : 2.4.4
+  scipy              : 1.17.1
+  openpyxl           : 3.1.5
+  Bootstrap seed     : 42
+  Bootstrap N        : 10000
+
+PARÁMETROS DE FILTRADO
+------------------------------------------------------------------------
+  Hoja               : Datos_Normalizados
+  Var fuente ingreso : col 61 = 5.2.4_Ingreso_Mensual_Promedio_COP
+  Filtro             : notna() & (>0)
+  Var grupo          : col 6 = 1.6_Sexo
+  Codificación xlsx  : M=Masculino, F=Femenino
+  Mapeo a anchors    : M(xlsx)->H(Hombre), F(xlsx)->M(Mujer)
+  n total            : 24
+  n_H                : 18
+  n_M                : 6
+
+ESTADÍSTICOS DESCRIPTIVOS
+------------------------------------------------------------------------
+  H: min=$100,000, Q1=$112,500, mediana=$850,000, Q3=$1,000,000, max=$23,990,000, media=$3,229,704
+  M: min=$60,000, mediana=$100,000, max=$300,000, media=$120,000
+  Valores H: [100000, 100000, 100000, 100000, 100000, 150000, 300000, 300000, 800000, 900000, 1000000, 1000000, 1000000, 1000000, 1800000, 11666666, 13728000, 23990000]
+  Valores M: [60000, 60000, 100000, 100000, 100000, 300000]
+
+========================================================================
+ARGUMENTO 1 — Mediana robusta a outliers por construcción
+========================================================================
+  Ratio mediana H/M  = 8.50:1
+  Ratio media H/M    = 26.91:1  (caveat: media inflada por outliers)
+  Lectura: la mediana selecciona posiciones centrales (9-10 de 18 ordenados),
+  los 3 outliers superiores (posiciones 16-18) NO afectan ese cálculo.
+  La media SÍ se infla; statistical_rules CLAUDE.md exige mediana en distribuciones asimétricas.
+
+========================================================================
+ARGUMENTO 2 — Validación con 3 pruebas no paramétricas
+========================================================================
+  Mann-Whitney U     = 93.5
+  Mann-Whitney p     = 0.00786  (significativa α=0.01)
+  Bootstrap N        = 10000 réplicas, seed=42
+  Bootstrap IC 95%   = [1.50; 16.67]
+  IC NO incluye 1?   = True  (brecha estadísticamente real)
+  Hodges-Lehmann     = $700,000  (mediana de las 108 diferencias H_i - M_j pareadas)
+
+========================================================================
+ARGUMENTO 3 — Robustez a la especificación (sensitivity)
+========================================================================
+  IQR-fence superior H = $2,331,250
+  Outliers IQR-fence H : ['$11,666,666', '$13,728,000', '$23,990,000']
+  ID Encuesta declarado: 40 (M, PECUARIO) — anchor CLAUDE.md
+  n_H sin outliers     : 15
+  Mediana H sin outliers = $300,000
+  Ratio sin outliers   = 3.00:1
+  Lectura: brecha persiste, magnitud cambia esperadamente (n menor).
+
+========================================================================
+ARGUMENTO 4 — Dualidad distributiva (referencia tesis p.50-51)
+========================================================================
+  En el circuito institucional PSA (n=134 Familia Campesina), la dirección
+  de la brecha se INVIERTE: mediana M $277.312 > mediana H $215.688
+  (anchor CLAUDE.md, fórmula PSA mensualizado canónica cerrada en F1).
+
+  Verificable vía: questions/004_psa_formula_canonica.md (cerrada F1)
+  No recalculado en este script (excede scope D2). Argumento referenciado.
+
+  Implicación: la desigualdad NO está en el esquema PSA (que es progresivo
+  con mujeres), sino en el mercado de ingresos productivos. Convierte E4 de
+  hallazgo descriptivo a argumento de política pública (Plan R2 tesis).
+
+========================================================================
+VERIFICACIÓN DE PARIDAD CON HANDOFF F4
+========================================================================
+  [OK] median_H: got=850000.0 expected=850000 tol=1000
+  [OK] median_M: got=100000.0 expected=100000 tol=1000
+  [OK] ratio_median: got=8.5 expected=8.5 tol=0.01
+  [OK] mannwhitney_U: got=93.5 expected=93.5 tol=0.5
+  [OK] mannwhitney_p: got=0.007864548773794111 expected=0.00786 tol=0.001
+  [OK] bootstrap_ic_low: got=1.5 expected=1.5 tol=0.01
+  [OK] bootstrap_ic_high: got=16.666666666666668 expected=16.67 tol=0.01
+  [OK] hodges_lehmann: got=700000.0 expected=700000 tol=1000
+  [OK] median_H_no_outliers: got=300000 expected=300000 tol=1000
+  [OK] ratio_no_outliers: got=3.0 expected=3.0 tol=0.01
+  [OK] ratio_mean_caveat: got=26.91419722222222 expected=26.91 tol=0.01
+
+RESULTADO: OK — todos los valores coinciden con los inscritos en
+audit/fase4/HANDOFF.md sección Justificación Metodológica D2.
+
+========================================================================
+FIN
+========================================================================

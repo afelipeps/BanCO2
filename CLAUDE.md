@@ -63,7 +63,7 @@ Cifras verificadas contra microdatos. Intocables salvo evidencia nueva:
 - Edad: media 57,81; mediana 60; rango 15–90
 - Área conservada: 104,6 ha/familia
 - Continuaría sin pago: 100% (n=80)
-- Mejora ambiental percibida: 97,5% en todos los ejes
+- Mejora ambiental percibida (Tabla 1 tesis p.44, n=80): 97,5% (78/80) en cada uno de los 4 servicios ecosistémicos (aire, agua cantidad, agua calidad, fauna); 98,8% (79/80) mitigación cambio climático; 100% (80/80) continuidad sin pago. Total Tabla 1 = 6 indicadores (no 4, no 5). φ=1,000 correlación inter-indicador entre los 4 servicios — los mismos 78 hogares responden Sí en los 4, los mismos 2 responden No en los 4 (F1 hallazgo H1, evidencia de "cultura preexistente" tesis p.45)
 - Brecha género mercado: 8,5:1 (mediana H $850k vs M $100k, n=24)
 - Mediana PSA mensualizado: mujeres $277.312 > hombres $215.688 (n=134)
 - Pagos: 141 socios total (134 Familia Campesina + 7 Institución). Subgrupo canónico para mediana PSA: Familia Campesina n=134 (H=97, M=37).

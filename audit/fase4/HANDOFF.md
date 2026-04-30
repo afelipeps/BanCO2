@@ -122,6 +122,101 @@ Commits granulares por sub-tarea (no por lote completo).
 - `audit/fase4/MERGE_REPORT.md`
 - Tag `v0.4.0` post-merge
 
+## Justificación metodológica de cifras tesis (BLOQUEANTE pre-F4)
+
+Antes de tocar D2 (boxplot E4) o H1-VIZ (Tabla 1 ambiental), revisar este protocolo y ejecutar [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) para reproducir las cifras estadísticas. Si en F4 microdatos contradicen tesis: NO modificar tesis ni microdatos; escalar vía `questions/NNN_tesis_microdatos.md`. Tesis es source of truth para narrativa publicada; microdatos son source of truth para cálculos empíricos (CLAUDE.md `<sources>`).
+
+### D2 — Brecha de género 8,5:1
+
+**Cifra principal** (sostenida por Velásquez, Palacio y Álvarez 2025, p.50; ancla CLAUDE.md):
+
+- Ratio mediana H/M = **8,5:1**, n=24 hogares con ingreso productivo cuantificable
+- Mediana hombres: $850.000 COP/mes (n=18)
+- Mediana mujeres: $100.000 COP/mes (n=6)
+- Outlier máximo masculino: $23.990.000 COP/mes (mencionado tesis p.50; ID 40, M, PECUARIO — no eliminar, anchor CLAUDE.md)
+- Outlier máximo femenino: $300.000
+
+**Argumentación estadística (4 capas; reproducibles vía [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) seed=42, log committeado en [`audit/fase3/scripts/defense_d2_run.log`](../fase3/scripts/defense_d2_run.log)):**
+
+1. **La mediana es estimador robusto a outliers por construcción.** Con n=18 hombres ordenados, la mediana es el promedio de las posiciones 9-10; los 3 outliers (posiciones 16-18) NO afectan ese cálculo. La media SÍ se infla con outliers (Ratio media H/M = 26,9:1). `<statistical_rules>` CLAUDE.md exige mediana sobre media en distribuciones asimétricas — la elección del 8,5:1 está alineada con el protocolo del proyecto, no es decisión ad-hoc.
+
+2. **Tres pruebas no paramétricas validan brecha real (independientes de outliers):**
+   - Mann-Whitney U test: U=93,5; p=0,008 (significativa α=0,01)
+   - Bootstrap n=10.000 réplicas, IC 95% del ratio mediana = [1,50; 16,67]. **El IC NO incluye 1** ⇒ brecha estadísticamente real
+   - Hodges-Lehmann (mediana de las 108 diferencias H_i − M_j pareadas) = $700.000
+
+3. **Sensitivity sin outliers IQR-fence H** (n=15, removidos $11.666.667 / $13.728.000 / $23.990.000): mediana H cae a $300.000, ratio 3,0:1. La PERMANENCIA de la brecha bajo distintas especificaciones confirma robustez del hallazgo a la especificación del análisis. La magnitud cambia (esperable con n menor); la dirección persiste.
+
+4. **Dualidad distributiva** (refuerzo argumento tesis p.50-51): en el circuito institucional PSA (n=134 Familia Campesina), la dirección se INVIERTE — mediana M $277.312 > mediana H $215.688 (anchor CLAUDE.md, fórmula PSA mensualizado canónica cerrada en F1 vía `questions/closed/004_pagos_n_141_vs_148.md`). Esto demuestra que la desigualdad NO está en el esquema PSA (que es progresivo con mujeres), sino en el mercado de ingresos productivos. Convierte E4 de "hallazgo descriptivo" a argumento de política pública: el PSA hace su parte; la brecha residual proviene del mercado, no del instrumento. Justifica el plan de acción R2 (Economía del Cuidado y Cierre de Brechas) declarado en tesis.
+
+**Visualización F4 propuesta:**
+
+- Boxplot doble H/M con scatter overlay de datos crudos jittered (template en [`benchmarks/viz/src/pages/recharts/Boxplot.tsx`](../../benchmarks/viz/src/pages/recharts/Boxplot.tsx))
+- Outliers IQR-fence etiquetados con valor exacto (LabelList por punto fuera de fences) — caveat documentado en F3 sobre que recharts no etiqueta outliers nativamente; F4 añade la lógica
+- KPI principal: "Brecha 8,5:1" con n=24 visible
+- Footer académico expandible/colapsable con los 4 argumentos en lenguaje accesible + referencia a [`audit/fase3/scripts/defense_d2_run.log`](../fase3/scripts/defense_d2_run.log)
+- Mención breve a la dualidad PSA (sin gráfico adicional en F4 — el boxplot paralelo PSA queda diferido a F5, ver [`audit/fase5/HANDOFF_PLACEHOLDER.md`](../fase5/HANDOFF_PLACEHOLDER.md) ítem F5-01)
+
+**Anti-patrón:** presentar 8,5:1 sin los 4 argumentos. Sin contexto estadístico, un revisor académico puede leer el ratio como "inflado por outliers" — los 4 argumentos blindan contra esa crítica.
+
+### H1-VIZ — Tabla 1 Ambiental (alineación con tesis)
+
+**Cifra principal** (Velásquez, Palacio y Álvarez 2025, Tabla 1 p.44; verificada en `docs/tesis.docx`, **lista 6 indicadores binarios**):
+
+| INDICADOR                            | SÍ  | %      |
+|--------------------------------------|-----|--------|
+| Mejora percibida en calidad del aire | 78  | 97,5%  |
+| Mejora percibida en cantidad de agua | 78  | 97,5%  |
+| Mejora percibida en calidad del agua | 78  | 97,5%  |
+| Mejora percibida en fauna silvestre  | 78  | 97,5%  |
+| Considera que mitiga cambio climático| 79  | 98,8%  |
+| Continuaría conservando sin pago     | 80  | 100%   |
+
+**Discrepancia dashboard vs tesis** (escalada a [`questions/014_radar_a2_densidad_arboles.md`](../../questions/014_radar_a2_densidad_arboles.md), pendiente decisión humana):
+
+- Dashboard radar A2 actual: 5 ejes (los 4 servicios + Densidad de Árboles)
+- Tesis Tabla 1: 6 indicadores (4 servicios + cambio climático + continuidad sin pago)
+- Densidad de árboles existe en microdatos (`2.2_Mejoro_Densidad_Arboles_SiNo`, 78/80 = 97,5%) pero NO fue publicada en Tabla 1 tesis
+
+**Estrategia F4** (propuesta tentativa, sujeta a resolución de question 014):
+
+La opción C de question 014 RESUELVE la discrepancia naturalmente: reemplazar el radar 5-ejes + las 5 charts SiNo individuales (todas con correlación φ=1,000 inter-respondiente, redundantes entre sí) por una sola tabla Wilson IC alineada con Tabla 1 tesis (6 filas):
+
+| INDICADOR              | n  | %      | IC 95% Wilson    |
+|------------------------|----|--------|------------------|
+| Calidad del aire       | 80 | 97,5%  | [91,4; 99,3]     |
+| Cantidad de agua       | 80 | 97,5%  | [91,4; 99,3]     |
+| Calidad del agua       | 80 | 97,5%  | [91,4; 99,3]     |
+| Fauna silvestre        | 80 | 97,5%  | [91,4; 99,3]     |
+| Mitigación cambio clim | 80 | 98,8%  | [93,2; 99,8]     |
+| Continuidad sin pago   | 80 | 100,0% | [95,4; 100,0]    |
+
+Wilson IC 95% agrega rigor estadístico (no incluido en tesis pero respaldado).
+
+**Interpretación académica** (refuerzo argumento tesis p.45):
+
+La correlación φ=1,000 perfecta entre los 4 servicios ecosistémicos (F1 hallazgo H1) NO contradice la tesis — la VALIDA. Los mismos 78 hogares respondieron "Sí" en los 4 servicios; los mismos 2 respondieron "No" en los 4. Esto es la evidencia matemática del argumento tesis: "el esquema validó una cultura preexistente". Los hogares con cultura ambiental preexistente responden afirmativamente en todos los servicios percibidos. Es coherencia inter-indicador, no artefacto metodológico.
+
+**Cita disponible para footer académico** (verificada en `docs/tesis.docx` párrafo 195, sin página declarada en el documento):
+
+> "Siempre he tenido buenas prácticas de cuidado y conservación, pero estando en el programa soy más comprometida. [Incluso si no pagaran], sigo cuidando el bosque" — Encuesta PSA 2025, ID-29
+
+**Implementación recharts:** `BarChart` horizontal con `ErrorBar` nativo. Estimado ~30 min siguiendo template Wilson IC bars. Reescribir copy de sección Ambiental para reflejar índice unidimensional (4 servicios con coherencia perfecta inter-respondiente).
+
+### Otros indicadores con justificación pendiente
+
+Scope acotado a D2 + H1-VIZ porque son los que F4 toca con mayor riesgo narrativo. Los siguientes requieren justificación similar pero quedan diferidos:
+
+- **SROI 2,22:1** (anchored): F4 toca N1-N3 (cambios narrativos a etiquetas attribution / deadweight / displacement). La defensa metodológica de los proxies del Apéndice 1 tesis se pospone a F5 si tiempo lo permite, o quedará para defensa oral.
+- **Continuidad 100% (n=80)**: 100% perfecto requiere disclosure de Wilson IC [95,4%; 100,0%] para no presentar certeza absoluta como hecho — H1-VIZ tabla ya lo cubre nativamente.
+- **Brecha jefatura hogar mujeres 78,79% (n=33)**: n pequeño requiere IC explícito en próximo touch (queueado a F5 vía `audit/fase5/HANDOFF_PLACEHOLDER.md`).
+- **Boxplot paralelo PSA H/M (n=134)** como refuerzo visual de dualidad: diferido formalmente a F5 ítem F5-01.
+
+### Scripts de reproducibilidad
+
+- [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) — script único que reproduce los 4 argumentos de D2 (mediana, Mann-Whitney, Bootstrap IC, Hodges-Lehmann, sensitivity). Asserts internos detectan drift y fallan con código de salida 2.
+- [`audit/fase3/scripts/defense_d2_run.log`](../fase3/scripts/defense_d2_run.log) — output committeado con header de trazabilidad (timestamp UTC, SHA-256 del XLSX, SHA-256 del script, versiones Python/numpy/scipy/openpyxl, seed). Re-ejecutar en F4 ANTES de implementar D2 para confirmar que las cifras se mantienen sobre microdatos actuales.
+
 ## Co-autoría
 
 - Andrés Felipe Palacio Santamaría — coautor humano, validación de cifras y narrativas
