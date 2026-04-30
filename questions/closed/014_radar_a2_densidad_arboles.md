@@ -143,8 +143,6 @@ Ver `questions/closed/014_radar_a2_densidad_arboles.respuesta.md` para el razona
 
 Resuelta 2026-04-29 con Opción D. Ver `questions/closed/014_radar_a2_densidad_arboles.respuesta.md`.
 
-Cuando se resuelva, esta question se mueve a `questions/closed/014_radar_a2_densidad_arboles.md`. Si la decisión es C, se ejecuta como parte del issue H1-VIZ del backlog F4 (ver `audit/fase3/PLAN.md` lote 2). Si es A, se documenta en `audit/fase4/HANDOFF.md` como sub-tarea independiente. Si es B, se documenta en `audit/fase4/disclosure_debt.md` como nota visible en el componente A2.
-
 ## Trazabilidad
 
 - Microdatos: `data_source/BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx` hoja `Datos_Normalizados`, columnas 17-22 + 29 + 71
