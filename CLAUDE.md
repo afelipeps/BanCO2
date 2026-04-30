@@ -37,7 +37,36 @@ Jerarquía: microdatos > tesis > código.
 2. Tesis — docs/tesis.docx (gitignored). Autoridad en SROI, Teoría del Cambio, interpretaciones.
 3. Código — hipótesis a verificar, nunca verdad.
 Si microdatos y tesis divergen: escribir questions/NNN_divergencia.md, no corregir en silencio.
+Para distinción entre cifras canónicas (tesis) e información expandida (dashboard), ver <dashboard_role> abajo.
 </sources>
+
+<dashboard_role>
+El dashboard NO es complemento ni anexo de la tesis: es la presentación COMPLETA de los hallazgos cuya forma corta y citable es la tesis publicada. La tesis tiene límite editorial de palabras; el dashboard presenta la totalidad de la información empírica recogida y procesada bajo la misma metodología.
+
+Implicaciones operativas:
+
+1. Información presente en microdatos pero NO publicada en tesis por límite de espacio editorial PUEDE aparecer en dashboard, con disclosure metodológico explícito (footer académico que indique "indicador medido pero no incluido en publicación por límite editorial"). NO es discrepancia ni inconsistencia; es expansión metodológica fiel.
+
+2. Hallazgos derivados (concordancias entre lecturas, sensitivities, intervalos de confianza, pruebas no paramétricas) que no cupieron en tesis son BIENVENIDOS en dashboard como capas adicionales de defensa académica.
+
+3. Una cifra del dashboard que NO esté en tesis NO es contradicción si:
+   - Está respaldada por microdatos.
+   - Respeta el método declarado en tesis.
+   - Lleva disclosure explícito de que es expansión, no cifra publicada.
+
+4. La fidelidad NUMÉRICA con cifras-ancla de la tesis se mantiene intocable (anchors de este CLAUDE.md). La fidelidad de SCOPE (qué se muestra) puede ser MAYOR en dashboard que en tesis.
+
+5. El dashboard es herramienta de soporte, validación y defensa de la tesis. Cada visualización debe poder defenderse ante un jurado académico con trazabilidad reproducible (script + log committeable cuando aplique).
+
+Jerarquía revisada de autoridades:
+- microdatos = autoridad empírica (valor verificable)
+- tesis publicada = autoridad narrativa (interpretación, marco teórico, plan de acción, cifras canónicas citables)
+- dashboard = presentación expandida fiel al método tesis sobre la totalidad de microdatos, con disclosure de scope cuando excede lo publicado
+
+Casos de aplicación documentados al inscribirse este principio (2026-04-29):
+- H1-VIZ: tabla ambiental publicada tiene 6 indicadores; dashboard muestra 7 (incluye Densidad de Árboles, medida con misma metodología, omitida por límite editorial). Decisión en `questions/closed/014_radar_a2_densidad_arboles.respuesta.md`.
+- D2: tesis publica ratio 8,5:1 género; dashboard expande con Mann-Whitney, Bootstrap IC, Hodges-Lehmann, sensitivity y concordancia con segmentación capital previo (67:1, 100% masculino). Documentado en HANDOFF F4 sección Justificación Metodológica.
+</dashboard_role>
 
 <dataset_versioning>
 Las cifras hardcodeadas en data.tsx provienen del dataset usado en la tesis publicada (Velásquez, Palacio, Álvarez 2025). El xlsx en data_source/ puede estar más actualizado y diferir en muestras pequeñas (n<30) por:

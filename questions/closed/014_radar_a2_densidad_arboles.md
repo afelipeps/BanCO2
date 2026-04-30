@@ -93,17 +93,55 @@ Contras:
 
 Impacto F4: implementación principal del issue H1-VIZ. Reemplaza 6 componentes (`Radar A2` + 5 `BarVertical` SiNo) por 1 componente nuevo (`WilsonBar` o `WilsonTable`) con 6 filas. Estimado ~30 min con template `BarChart` + `ErrorBar` nativo de recharts.
 
-## Recomendación tentativa
+### D — Tabla 7-filas Wilson IC con disclosure de scope (RESUELTA bajo principio dashboard_role)
 
-**Opción C.** Resuelve la discrepancia con tesis Y el issue H1-VIZ del backlog en una sola intervención. El radar 5-ejes con datos colineales no aporta información — la tabla 6-filas con Wilson IC fiel a Tabla 1 sí.
+Decisión adoptada tras inscribir el principio `<dashboard_role>` en CLAUDE.md (2026-04-29).
 
-Si Andrés prefiere conservar el radar como elemento visual narrativo del dashboard, opción A (eliminar 5to eje) es el mínimo aceptable para alinear con publicación.
+Bajo este principio, la "discrepancia" entre Tabla 1 tesis (6 indicadores) y radar dashboard (5 ejes con Densidad de Árboles) se reformula: NO es discrepancia, es ALCANCE EXPANDIDO. Densidad de Árboles fue medido en la encuesta con la misma metodología que los 4 servicios ecosistémicos publicados (proporción 78/80 = 97,5%), pero no se incluyó en Tabla 1 de Velásquez, Palacio y Álvarez (2025) por límite editorial de palabras.
 
-Opción B (mantener 5 ejes con nota) es la más débil — conserva inconsistencia visible bajo justificación textual que probablemente nadie leerá en una defensa de tesis.
+Implementación F4:
+
+Tabla 7-filas con Wilson IC y columna explícita de scope:
+
+| INDICADOR              | n  | %      | IC 95% Wilson    | Publicado tesis |
+|------------------------|----|--------|------------------|-----------------|
+| Calidad del aire       | 80 | 97,5%  | [91,3; 99,3]     | ✓ Tabla 1       |
+| Cantidad de agua       | 80 | 97,5%  | [91,3; 99,3]     | ✓ Tabla 1       |
+| Calidad del agua       | 80 | 97,5%  | [91,3; 99,3]     | ✓ Tabla 1       |
+| Fauna silvestre        | 80 | 97,5%  | [91,3; 99,3]     | ✓ Tabla 1       |
+| Densidad de árboles    | 80 | 97,5%  | [91,3; 99,3]     | ✗ (1)           |
+| Mitigación cambio clim | 80 | 98,8%  | [93,3; 99,8]     | ✓ Tabla 1       |
+| Continuidad sin pago   | 80 | 100,0% | [95,4; 100,0]    | ✓ Tabla 1       |
+
+(1) Densidad de árboles fue medida en la encuesta con misma metodología; no se incluyó en Tabla 1 publicada por límite editorial. Dashboard la presenta como expansión metodológica fiel (CLAUDE.md `<dashboard_role>`).
+
+Footer académico del componente (texto canónico para implementar en F4):
+
+> "El indicador 'Densidad de árboles' fue medido en la encuesta PSA 2025 con la misma metodología binaria (Sí/No) que los otros 4 servicios ecosistémicos. Su proporción afirmativa (78/80 = 97,5%) es idéntica a la de los servicios publicados, lo cual refuerza la lectura de coherencia inter-respondiente φ=1,000 (cultura preexistente, tesis p.45). No fue incluido en Tabla 1 de la tesis (Velásquez, Palacio, Álvarez 2025, p.44) por límite editorial de palabras. El dashboard lo presenta como expansión metodológica fiel, no como discrepancia."
+
+Pros (sobre opciones A/B/C):
+- Preserva todo dato medido bajo el método tesis sin perder fidelidad.
+- Convierte aparente discrepancia en oportunidad de defensa académica (rigor metodológico).
+- Resuelve simultáneamente issue H1-VIZ del backlog F4.
+- Aplicación canónica del principio `<dashboard_role>`.
+- Footer académico citable directamente en defensa oral.
+
+Contras:
+- 7 filas en lugar de 6 puede confundir a un revisor que solo conozca Tabla 1; mitigado por columna "Publicado tesis" explícita.
+
+Impacto F4: implementación principal del issue H1-VIZ. Reemplaza radar A2 (5 ejes) + 5 charts SiNo individuales por 1 componente nuevo (`WilsonTable` con 7 filas) + footer académico expandible.
+
+Trazabilidad reproducible: `audit/fase3/scripts/wilson_h1viz.py` + `wilson_h1viz_run.log` (creados en este commit).
+
+## Decisión final
+
+**Opción D adoptada.** Las opciones A/B/C se preservan en este documento como historia de razonamiento, pero quedan superadas por la inscripción del principio `<dashboard_role>` en CLAUDE.md (2026-04-29).
+
+Ver `questions/closed/014_radar_a2_densidad_arboles.respuesta.md` para el razonamiento completo de la decisión.
 
 ## Decisión humana
 
-(Pendiente)
+Resuelta 2026-04-29 con Opción D. Ver `questions/closed/014_radar_a2_densidad_arboles.respuesta.md`.
 
 Cuando se resuelva, esta question se mueve a `questions/closed/014_radar_a2_densidad_arboles.md`. Si la decisión es C, se ejecuta como parte del issue H1-VIZ del backlog F4 (ver `audit/fase3/PLAN.md` lote 2). Si es A, se documenta en `audit/fase4/HANDOFF.md` como sub-tarea independiente. Si es B, se documenta en `audit/fase4/disclosure_debt.md` como nota visible en el componente A2.
 

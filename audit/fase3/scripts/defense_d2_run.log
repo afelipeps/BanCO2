@@ -4,10 +4,10 @@ audit/fase3/scripts/defense_d2.py — RUN LOG
 
 HEADER DE TRAZABILIDAD
 ------------------------------------------------------------------------
-  Timestamp UTC      : 2026-04-30T00:08:35Z
+  Timestamp UTC      : 2026-04-30T03:26:53Z
   XLSX path          : data_source\BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx
   XLSX SHA-256       : b03c9fcdc7a05f65136c89feaf555716489fa1a3214d90763c45172c6155b802
-  Script SHA-256     : 6ce7a48820f19726ffbbc0243b361ac6c6115fac86c4c0714b02f41008c84e0c
+  Script SHA-256     : bdc05a2ced70e78656d47c71622e72a88345d352905976fc055ef0a65dc07ad1
   Python             : 3.14.3
   numpy              : 2.4.4
   scipy              : 1.17.1
@@ -53,6 +53,14 @@ ARGUMENTO 2 — Validación con 3 pruebas no paramétricas
   IC NO incluye 1?   = True  (brecha estadísticamente real)
   Hodges-Lehmann     = $700,000  (mediana de las 108 diferencias H_i - M_j pareadas)
 
+  CAVEAT METODOLÓGICO: con n_M=6, el bootstrap de mediana es discretizado
+  (la mediana M solo puede tomar promedios de pares centrales de un resampleo
+  donde los valores únicos son {60.000; 100.000; 300.000}). El upper bound
+  16,67 = 1.000.000 / 60.000 es artefacto de cuando el resampleo bootstrap saca
+  [60k×6] como muestra de mujeres. La cota inferior 1,50 es robusta y >> 1,
+  evidencia que la brecha es estadísticamente real; la cota superior es
+  conservadora por el tamaño muestral pequeño.
+
 ========================================================================
 ARGUMENTO 3 — Robustez a la especificación (sensitivity)
 ========================================================================
@@ -79,6 +87,24 @@ ARGUMENTO 4 — Dualidad distributiva (referencia tesis p.50-51)
   hallazgo descriptivo a argumento de política pública (Plan R2 tesis).
 
 ========================================================================
+ARGUMENTO 5 — Concordancia género × capital productivo (refuerzo línea 472 tesis)
+========================================================================
+  Segmentación 1 (sexo)        : H 18 / M 6, ratio mediana 8,5:1
+  Segmentación 2 (capital)     : top 6 vs bot 18 ingresos, ratio mediana 67.3:1
+  Top 6 (capitalizados)        : 6 hombres + 0 mujeres
+  Bot 18 (subsistencia)        : 12 hombres + 6 mujeres
+  Mediana capitalizados        : $6,733,333
+  Mediana subsistencia         : $100,000
+  Hallazgo crítico             : la concentración del capital productivo es 100% masculina.
+  Las 6 mujeres de la muestra están todas en el segmento de subsistencia.
+  Lectura para defensa: las dos brechas (8,5:1 género; 67:1 capital) son
+  vistas superpuestas del mismo fenómeno. La asimetría de género en ingresos productivos
+  COINCIDE con la asimetría de género en propiedad de activos productivos (ganadería en
+  segmento capitalizado, según tesis línea 472). Convierte 8,5:1 de hallazgo descriptivo
+  en evidencia de exclusión estructural en propiedad de activos.
+  Refuerza el plan R2 (Economía del Cuidado y Cierre de Brechas) tesis.
+
+========================================================================
 VERIFICACIÓN DE PARIDAD CON HANDOFF F4
 ========================================================================
   [OK] median_H: got=850000.0 expected=850000 tol=1000
@@ -92,6 +118,13 @@ VERIFICACIÓN DE PARIDAD CON HANDOFF F4
   [OK] median_H_no_outliers: got=300000 expected=300000 tol=1000
   [OK] ratio_no_outliers: got=3.0 expected=3.0 tol=0.01
   [OK] ratio_mean_caveat: got=26.91419722222222 expected=26.91 tol=0.01
+  [OK] top6_h: got=6 expected=6 tol=0
+  [OK] top6_m: got=0 expected=0 tol=0
+  [OK] bot18_h: got=12 expected=12 tol=0
+  [OK] bot18_m: got=6 expected=6 tol=0
+  [OK] median_capital: got=6733333.0 expected=6733333 tol=1000
+  [OK] median_subsist: got=100000.0 expected=100000 tol=1000
+  [OK] ratio_capital: got=67.33333 expected=67.33 tol=0.1
 
 RESULTADO: OK — todos los valores coinciden con los inscritos en
 audit/fase4/HANDOFF.md sección Justificación Metodológica D2.

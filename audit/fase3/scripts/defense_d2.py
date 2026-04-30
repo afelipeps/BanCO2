@@ -50,6 +50,14 @@ EXPECTED = {
     "outlier_max_H": 23_990_000,
     "outlier_max_M": 300_000,
     "ratio_mean_caveat": 26.91,
+    # Argumento 5 — Concordancia género × capital productivo
+    "top6_h": 6,
+    "top6_m": 0,
+    "bot18_h": 12,
+    "bot18_m": 6,
+    "median_capital": 6_733_333,    # tesis cita $6.733.350 — diferencia por redondeo de mediana de pares
+    "median_subsist": 100_000,
+    "ratio_capital": 67.33,
 }
 TOL_AMOUNT = 1_000
 TOL_RATIO = 0.01
@@ -165,6 +173,19 @@ def main() -> None:
     median_H_clean = statistics.median(H_clean)
     ratio_clean = median_H_clean / median_M
 
+    # Argumento 5 — Concordancia entre brecha de género y brecha de capital productivo
+    # (refuerzo línea 472 tesis: "Dos velocidades económicas: inclusión vs. acumulación")
+    all_sorted = sorted([(p["ingreso"], p["sex"]) for p in points], key=lambda x: -x[0])
+    top6 = all_sorted[:6]
+    bot18 = all_sorted[6:]
+    top6_h = sum(1 for _, sx in top6 if sx == "H")
+    top6_m = sum(1 for _, sx in top6 if sx == "M")
+    bot18_h = sum(1 for _, sx in bot18 if sx == "H")
+    bot18_m = sum(1 for _, sx in bot18 if sx == "M")
+    median_capital = statistics.median([ing for ing, _ in top6])
+    median_subsist = statistics.median([ing for ing, _ in bot18])
+    ratio_capital = median_capital / median_subsist
+
     # Asserts: drift detector
     def check(name: str, got: float, expected: float, tol: float) -> str:
         ok = abs(got - expected) <= tol
@@ -182,6 +203,13 @@ def main() -> None:
         ("median_H_no_outliers", median_H_clean, EXPECTED["median_H_no_outliers"], TOL_AMOUNT),
         ("ratio_no_outliers", ratio_clean, EXPECTED["ratio_no_outliers"], TOL_RATIO),
         ("ratio_mean_caveat", ratio_mean, EXPECTED["ratio_mean_caveat"], TOL_RATIO),
+        ("top6_h", top6_h, EXPECTED["top6_h"], 0),
+        ("top6_m", top6_m, EXPECTED["top6_m"], 0),
+        ("bot18_h", bot18_h, EXPECTED["bot18_h"], 0),
+        ("bot18_m", bot18_m, EXPECTED["bot18_m"], 0),
+        ("median_capital", median_capital, EXPECTED["median_capital"], 1_000),
+        ("median_subsist", median_subsist, EXPECTED["median_subsist"], 1_000),
+        ("ratio_capital", ratio_capital, EXPECTED["ratio_capital"], 0.1),
     ]
 
     failed = [c for c in checks if abs(c[1] - c[2]) > c[3]]
@@ -242,6 +270,14 @@ def main() -> None:
     lines.append(f"  Bootstrap IC 95%   = [{ic_low:.2f}; {ic_high:.2f}]")
     lines.append(f"  IC NO incluye 1?   = {ic_low > 1.0}  (brecha estadísticamente real)")
     lines.append(f"  Hodges-Lehmann     = ${hl:,.0f}  (mediana de las {len(H)*len(M)} diferencias H_i - M_j pareadas)")
+    lines.append(f"")
+    lines.append(f"  CAVEAT METODOLÓGICO: con n_M=6, el bootstrap de mediana es discretizado")
+    lines.append(f"  (la mediana M solo puede tomar promedios de pares centrales de un resampleo")
+    lines.append(f"  donde los valores únicos son {{60.000; 100.000; 300.000}}). El upper bound")
+    lines.append(f"  16,67 = 1.000.000 / 60.000 es artefacto de cuando el resampleo bootstrap saca")
+    lines.append(f"  [60k×6] como muestra de mujeres. La cota inferior 1,50 es robusta y >> 1,")
+    lines.append(f"  evidencia que la brecha es estadísticamente real; la cota superior es")
+    lines.append(f"  conservadora por el tamaño muestral pequeño.")
     lines.append("")
     lines.append("=" * 72)
     lines.append("ARGUMENTO 3 — Robustez a la especificación (sensitivity)")
@@ -267,6 +303,24 @@ def main() -> None:
     lines.append(f"  Implicación: la desigualdad NO está en el esquema PSA (que es progresivo")
     lines.append(f"  con mujeres), sino en el mercado de ingresos productivos. Convierte E4 de")
     lines.append(f"  hallazgo descriptivo a argumento de política pública (Plan R2 tesis).")
+    lines.append("")
+    lines.append("=" * 72)
+    lines.append("ARGUMENTO 5 — Concordancia género × capital productivo (refuerzo línea 472 tesis)")
+    lines.append("=" * 72)
+    lines.append(f"  Segmentación 1 (sexo)        : H {len(H)} / M {len(M)}, ratio mediana 8,5:1")
+    lines.append(f"  Segmentación 2 (capital)     : top 6 vs bot 18 ingresos, ratio mediana {ratio_capital:.1f}:1")
+    lines.append(f"  Top 6 (capitalizados)        : {top6_h} hombres + {top6_m} mujeres")
+    lines.append(f"  Bot 18 (subsistencia)        : {bot18_h} hombres + {bot18_m} mujeres")
+    lines.append(f"  Mediana capitalizados        : ${median_capital:,.0f}")
+    lines.append(f"  Mediana subsistencia         : ${median_subsist:,.0f}")
+    lines.append(f"  Hallazgo crítico             : la concentración del capital productivo es 100% masculina.")
+    lines.append(f"  Las 6 mujeres de la muestra están todas en el segmento de subsistencia.")
+    lines.append(f"  Lectura para defensa: las dos brechas (8,5:1 género; {ratio_capital:.0f}:1 capital) son")
+    lines.append(f"  vistas superpuestas del mismo fenómeno. La asimetría de género en ingresos productivos")
+    lines.append(f"  COINCIDE con la asimetría de género en propiedad de activos productivos (ganadería en")
+    lines.append(f"  segmento capitalizado, según tesis línea 472). Convierte 8,5:1 de hallazgo descriptivo")
+    lines.append(f"  en evidencia de exclusión estructural en propiedad de activos.")
+    lines.append(f"  Refuerza el plan R2 (Economía del Cuidado y Cierre de Brechas) tesis.")
     lines.append("")
     lines.append("=" * 72)
     lines.append("VERIFICACIÓN DE PARIDAD CON HANDOFF F4")

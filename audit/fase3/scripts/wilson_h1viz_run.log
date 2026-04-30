@@ -1,0 +1,73 @@
+========================================================================
+audit/fase3/scripts/wilson_h1viz.py — RUN LOG
+========================================================================
+
+HEADER DE TRAZABILIDAD
+------------------------------------------------------------------------
+  Timestamp UTC      : 2026-04-30T03:26:57Z
+  XLSX path          : data_source\BASE_DATOS_BANCO2_NORMALIZADA_Graficas.xlsx
+  XLSX SHA-256       : b03c9fcdc7a05f65136c89feaf555716489fa1a3214d90763c45172c6155b802
+  Script SHA-256     : ed7ebdd60689d85d65a2f2b50a877193c140361a8c8d2dac37fcc38cde17e4e2
+  Python             : 3.14.3
+  statsmodels        : 0.14.6
+  openpyxl           : 3.1.5
+  Metodo IC          : Wilson score (statsmodels canonico)
+  Alpha              : 0.05  (IC 95%)
+
+APLICACION PRINCIPIO <dashboard_role> CLAUDE.md
+------------------------------------------------------------------------
+  Tabla H1-VIZ del dashboard incluye 7 indicadores:
+  - 6 publicados en Tabla 1 tesis (Velasquez, Palacio, Alvarez 2025, p.44)
+  - 1 medido con misma metodologia, omitido por limite editorial:
+    Densidad de arboles. Disclosure explicito en footer academico.
+
+CARDINALIDAD OBSERVADA POR INDICADOR (validate_cardinality)
+------------------------------------------------------------------------
+  Col 22 Calidad del aire          cardinalidad: {'Sí': 78, 'No': 2}
+  Col 20 Cantidad de agua          cardinalidad: {'Sí': 78, 'No': 2}
+  Col 21 Calidad del agua          cardinalidad: {'Sí': 78, 'No': 2}
+  Col 18 Fauna silvestre           cardinalidad: {'Sí': 78, 'No': 2}
+  Col 17 Densidad de arboles       cardinalidad: {'Sí': 78, 'No': 2}
+  Col 29 Mitigacion cambio clim    cardinalidad: {'Sí': 79, '__missing__': 1}
+  Col 71 Continuidad sin pago      cardinalidad: {'Sí': 79, 'Mucho': 1}
+
+  Tratamiento de valores no canonicos:
+  - 'Mucho' (col 71 Continuaria sin pago, 1 caso): afirmativo intensificado.
+    Cuenta como Si. Resultado 80/80 = 100% alineado con Tabla 1 tesis.
+  - None (col 29 Mitiga clima, 1 caso): tratado como No.
+    Resultado 79/80 = 98,8% alineado con Tabla 1 tesis.
+
+RESULTADOS — TABLA H1-VIZ (7 INDICADORES) WILSON IC 95%
+------------------------------------------------------------------------
+  Indicador                   k   n       %      IC 95% Wilson Publicado tesis   
+  Calidad del aire           78  80   97.5%     [ 91.3;  99.3] Tabla 1           
+  Cantidad de agua           78  80   97.5%     [ 91.3;  99.3] Tabla 1           
+  Calidad del agua           78  80   97.5%     [ 91.3;  99.3] Tabla 1           
+  Fauna silvestre            78  80   97.5%     [ 91.3;  99.3] Tabla 1           
+  Densidad de arboles        78  80   97.5%     [ 91.3;  99.3] (expansion)       
+  Mitigacion cambio clim     79  80   98.8%     [ 93.3;  99.8] Tabla 1           
+  Continuidad sin pago       80  80  100.0%     [ 95.4; 100.0] Tabla 1           
+
+========================================================================
+VERIFICACION DE PARIDAD CON HANDOFF F4 SECCION H1-VIZ
+========================================================================
+  [OK] k_aire: got=78.0 expected=78.0 tol=0.0
+  [OK] k_cantidad_agua: got=78.0 expected=78.0 tol=0.0
+  [OK] k_calidad_agua: got=78.0 expected=78.0 tol=0.0
+  [OK] k_fauna: got=78.0 expected=78.0 tol=0.0
+  [OK] k_densidad_arboles: got=78.0 expected=78.0 tol=0.0
+  [OK] k_clima: got=79.0 expected=79.0 tol=0.0
+  [OK] k_continuidad: got=80.0 expected=80.0 tol=0.0
+  [OK] ci_low_78_80: got=0.9133556701442198 expected=0.913 tol=0.001
+  [OK] ci_high_78_80: got=0.9931171067970292 expected=0.993 tol=0.001
+  [OK] ci_low_79_80: got=0.9325372992233133 expected=0.933 tol=0.001
+  [OK] ci_high_79_80: got=0.9977900244795476 expected=0.998 tol=0.001
+  [OK] ci_low_80_80: got=0.9541818704644728 expected=0.954 tol=0.001
+  [OK] ci_high_80_80: got=0.9999999999999999 expected=1.0 tol=0.001
+
+RESULTADO: OK — todas las cifras coinciden con las inscritas en
+audit/fase4/HANDOFF.md seccion H1-VIZ tabla 7-filas.
+
+========================================================================
+FIN
+========================================================================

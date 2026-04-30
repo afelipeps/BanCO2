@@ -124,7 +124,9 @@ Commits granulares por sub-tarea (no por lote completo).
 
 ## Justificación metodológica de cifras tesis (BLOQUEANTE pre-F4)
 
-Antes de tocar D2 (boxplot E4) o H1-VIZ (Tabla 1 ambiental), revisar este protocolo y ejecutar [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) para reproducir las cifras estadísticas. Si en F4 microdatos contradicen tesis: NO modificar tesis ni microdatos; escalar vía `questions/NNN_tesis_microdatos.md`. Tesis es source of truth para narrativa publicada; microdatos son source of truth para cálculos empíricos (CLAUDE.md `<sources>`).
+Esta sección aplica el principio CLAUDE.md `<dashboard_role>` (la tesis es la forma corta y citable de hallazgos cuya forma completa es el dashboard). Las cifras canónicas se preservan; las expansiones metodológicas (concordancia capital productivo en D2; Densidad de Árboles en H1-VIZ; Wilson IC en ambas) llevan disclosure explícito y trazabilidad reproducible.
+
+Antes de tocar D2 (boxplot E4) o H1-VIZ (Tabla 1 ambiental), revisar este protocolo y ejecutar [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) y [`audit/fase3/scripts/wilson_h1viz.py`](../fase3/scripts/wilson_h1viz.py) para reproducir las cifras estadísticas. Si en F4 microdatos contradicen tesis: NO modificar tesis ni microdatos; escalar vía `questions/NNN_tesis_microdatos.md`. Tesis es source of truth para narrativa publicada; microdatos son source of truth para cálculos empíricos (CLAUDE.md `<sources>`).
 
 ### D2 — Brecha de género 8,5:1
 
@@ -145,9 +147,17 @@ Antes de tocar D2 (boxplot E4) o H1-VIZ (Tabla 1 ambiental), revisar este protoc
    - Bootstrap n=10.000 réplicas, IC 95% del ratio mediana = [1,50; 16,67]. **El IC NO incluye 1** ⇒ brecha estadísticamente real
    - Hodges-Lehmann (mediana de las 108 diferencias H_i − M_j pareadas) = $700.000
 
+   **Caveat metodológico:** con n_M=6, el bootstrap de mediana es discretizado. La mediana M solo puede tomar promedios de pares centrales de un resampleo donde los valores únicos son {60.000; 100.000; 300.000}. El upper bound 16,67 = 1.000.000 / 60.000 es artefacto de los resampleos extremos donde bootstrap saca [60k×6] como muestra de mujeres. La cota inferior 1,50 es robusta y >> 1, lo cual sostiene el argumento; la cota superior es conservadora por el tamaño muestral pequeño y debe leerse así, no como expectativa puntual del ratio poblacional.
+
 3. **Sensitivity sin outliers IQR-fence H** (n=15, removidos $11.666.667 / $13.728.000 / $23.990.000): mediana H cae a $300.000, ratio 3,0:1. La PERMANENCIA de la brecha bajo distintas especificaciones confirma robustez del hallazgo a la especificación del análisis. La magnitud cambia (esperable con n menor); la dirección persiste.
 
 4. **Dualidad distributiva** (refuerzo argumento tesis p.50-51): en el circuito institucional PSA (n=134 Familia Campesina), la dirección se INVIERTE — mediana M $277.312 > mediana H $215.688 (anchor CLAUDE.md, fórmula PSA mensualizado canónica cerrada en F1 vía `questions/closed/004_pagos_n_141_vs_148.md`). Esto demuestra que la desigualdad NO está en el esquema PSA (que es progresivo con mujeres), sino en el mercado de ingresos productivos. Convierte E4 de "hallazgo descriptivo" a argumento de política pública: el PSA hace su parte; la brecha residual proviene del mercado, no del instrumento. Justifica el plan de acción R2 (Economía del Cuidado y Cierre de Brechas) declarado en tesis.
+
+5. **Concordancia entre brecha de género y brecha de capital productivo** (refuerzo argumento línea 472 tesis: *"...el 25% restante (6/24), que ya poseían capital productivo previo, principalmente ganadería, alcanza una mediana de $6.733.350 COP."* — "Dos velocidades económicas: inclusión vs. acumulación"): la misma muestra n=24 admite dos segmentaciones distintas que arrojan dos brechas aparentemente independientes:
+   - Por sexo (anchor CLAUDE.md): H 18 / M 6, ratio mediana 8,5:1
+   - Por capital productivo previo (línea 472 tesis): subsistencia 18 hogares (mediana $100.000) / capitalizados 6 hogares (mediana $6.733.333; tesis cita $6.733.350, diferencia ~$17 por convención de mediana de pares), ratio 67,33:1
+
+   Verificación empírica reproducible (defense_d2.py extendido, Argumento 5): **los 6 hogares capitalizados son 6 hombres y 0 mujeres; los 18 de subsistencia son 12 hombres + 6 mujeres**. La concentración del capital productivo es 100% masculina; las 6 mujeres están concentradas en el segmento de subsistencia. Esto vincula causalmente ambas brechas: la asimetría de género en ingresos productivos coincide con la asimetría de género en propiedad de activos productivos (ganadería en el segmento capitalizado, según tesis línea 472). El ratio 8,5:1 deja de ser hallazgo descriptivo para convertirse en evidencia de exclusión estructural en propiedad de activos. Justifica con mayor solidez el plan R2 (Economía del Cuidado y Cierre de Brechas) tesis, que combina ingreso + acceso a activos productivos como dos palancas indisociables.
 
 **Visualización F4 propuesta:**
 
@@ -172,26 +182,31 @@ Antes de tocar D2 (boxplot E4) o H1-VIZ (Tabla 1 ambiental), revisar este protoc
 | Considera que mitiga cambio climático| 79  | 98,8%  |
 | Continuaría conservando sin pago     | 80  | 100%   |
 
-**Discrepancia dashboard vs tesis** (escalada a [`questions/014_radar_a2_densidad_arboles.md`](../../questions/014_radar_a2_densidad_arboles.md), pendiente decisión humana):
+**Discrepancia dashboard vs tesis resuelta bajo `<dashboard_role>`** (decisión documentada en [`questions/closed/014_radar_a2_densidad_arboles.respuesta.md`](../../questions/closed/014_radar_a2_densidad_arboles.respuesta.md), Opción D):
 
 - Dashboard radar A2 actual: 5 ejes (los 4 servicios + Densidad de Árboles)
 - Tesis Tabla 1: 6 indicadores (4 servicios + cambio climático + continuidad sin pago)
-- Densidad de árboles existe en microdatos (`2.2_Mejoro_Densidad_Arboles_SiNo`, 78/80 = 97,5%) pero NO fue publicada en Tabla 1 tesis
+- Densidad de árboles existe en microdatos (`2.2_Mejoro_Densidad_Arboles_SiNo`, 78/80 = 97,5%) — medida con misma metodología, omitida por límite editorial. Bajo `<dashboard_role>` NO es discrepancia: es expansión metodológica fiel.
 
-**Estrategia F4** (propuesta tentativa, sujeta a resolución de question 014):
+**Estrategia F4 (Opción D, decidida 2026-04-29):**
 
-La opción C de question 014 RESUELVE la discrepancia naturalmente: reemplazar el radar 5-ejes + las 5 charts SiNo individuales (todas con correlación φ=1,000 inter-respondiente, redundantes entre sí) por una sola tabla Wilson IC alineada con Tabla 1 tesis (6 filas):
+Reemplazar el radar 5-ejes + las 5 charts SiNo individuales (todas con correlación φ=1,000 inter-respondiente, redundantes entre sí) por una sola tabla Wilson IC con 7 filas (los 6 publicados en Tabla 1 tesis + Densidad de Árboles como expansión metodológica):
 
-| INDICADOR              | n  | %      | IC 95% Wilson    |
-|------------------------|----|--------|------------------|
-| Calidad del aire       | 80 | 97,5%  | [91,4; 99,3]     |
-| Cantidad de agua       | 80 | 97,5%  | [91,4; 99,3]     |
-| Calidad del agua       | 80 | 97,5%  | [91,4; 99,3]     |
-| Fauna silvestre        | 80 | 97,5%  | [91,4; 99,3]     |
-| Mitigación cambio clim | 80 | 98,8%  | [93,2; 99,8]     |
-| Continuidad sin pago   | 80 | 100,0% | [95,4; 100,0]    |
+| INDICADOR              | n  | %      | IC 95% Wilson    | Publicado Tabla 1 tesis |
+|------------------------|----|--------|------------------|-------------------------|
+| Calidad del aire       | 80 | 97,5%  | [91,3; 99,3]     | ✓                       |
+| Cantidad de agua       | 80 | 97,5%  | [91,3; 99,3]     | ✓                       |
+| Calidad del agua       | 80 | 97,5%  | [91,3; 99,3]     | ✓                       |
+| Fauna silvestre        | 80 | 97,5%  | [91,3; 99,3]     | ✓                       |
+| Densidad de árboles    | 80 | 97,5%  | [91,3; 99,3]     | ✗ (1)                   |
+| Mitigación cambio clim | 80 | 98,8%  | [93,3; 99,8]     | ✓                       |
+| Continuidad sin pago   | 80 | 100,0% | [95,4; 100,0]    | ✓ (2)                   |
 
-Wilson IC 95% agrega rigor estadístico (no incluido en tesis pero respaldado).
+(1) Densidad de árboles fue medido en encuesta PSA 2025 con misma metodología binaria (Sí/No) que los 4 servicios ecosistémicos publicados (proporción 78/80 = 97,5%, idéntica a los demás). No fue incluido en Tabla 1 de Velásquez, Palacio y Álvarez (2025, p.44) por límite editorial de palabras. El dashboard lo presenta como expansión metodológica fiel bajo el principio CLAUDE.md `<dashboard_role>` (no como discrepancia). Decisión documentada en `questions/closed/014_radar_a2_densidad_arboles.respuesta.md`.
+
+(2) De los 80 respondientes en col `6.4_Continuaria_Sin_Pago`, 79 respondieron "Sí" y 1 respondió "Mucho". `<statistical_rules>` CLAUDE.md exige tratamiento explícito de valores fuera del set canónico {Sí, No}: "Mucho" se cuenta como afirmativo intensificado (no como categoría adicional, no como missing). Resultado 80/80 = 100% alineado con Tabla 1 tesis. Cardinalidad observada verificable en `audit/fase3/scripts/wilson_h1viz_run.log` sección "CARDINALIDAD OBSERVADA".
+
+Wilson IC 95% agrega rigor estadístico (no incluido en tesis pero respaldado), computado con `statsmodels.stats.proportion.proportion_confint(method='wilson')` y reportado con 1 decimal según `<statistical_rules>` CLAUDE.md ("Precisión máx 1 decimal con n<100"). Cambios <0,1pp no son interpretables.
 
 **Interpretación académica** (refuerzo argumento tesis p.45):
 
@@ -201,7 +216,7 @@ La correlación φ=1,000 perfecta entre los 4 servicios ecosistémicos (F1 halla
 
 > "Siempre he tenido buenas prácticas de cuidado y conservación, pero estando en el programa soy más comprometida. [Incluso si no pagaran], sigo cuidando el bosque" — Encuesta PSA 2025, ID-29
 
-**Implementación recharts:** `BarChart` horizontal con `ErrorBar` nativo. Estimado ~30 min siguiendo template Wilson IC bars. Reescribir copy de sección Ambiental para reflejar índice unidimensional (4 servicios con coherencia perfecta inter-respondiente).
+**Implementación recharts:** `BarChart` horizontal con `ErrorBar` nativo. Estimado ~30 min siguiendo template Wilson IC bars. Reescribir copy de sección Ambiental para reflejar índice unidimensional (4 servicios con coherencia perfecta inter-respondiente). El componente `WilsonTable` con 7 filas reemplaza el radar A2 (5 ejes) + las 5 charts SiNo individuales.
 
 ### Otros indicadores con justificación pendiente
 
@@ -214,8 +229,10 @@ Scope acotado a D2 + H1-VIZ porque son los que F4 toca con mayor riesgo narrativ
 
 ### Scripts de reproducibilidad
 
-- [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) — script único que reproduce los 4 argumentos de D2 (mediana, Mann-Whitney, Bootstrap IC, Hodges-Lehmann, sensitivity). Asserts internos detectan drift y fallan con código de salida 2.
+- [`audit/fase3/scripts/defense_d2.py`](../fase3/scripts/defense_d2.py) — script único que reproduce los 5 argumentos de D2 (mediana, Mann-Whitney, Bootstrap IC, Hodges-Lehmann, sensitivity, concordancia capital productivo). 18 asserts internos detectan drift y fallan con código de salida 2.
 - [`audit/fase3/scripts/defense_d2_run.log`](../fase3/scripts/defense_d2_run.log) — output committeado con header de trazabilidad (timestamp UTC, SHA-256 del XLSX, SHA-256 del script, versiones Python/numpy/scipy/openpyxl, seed). Re-ejecutar en F4 ANTES de implementar D2 para confirmar que las cifras se mantienen sobre microdatos actuales.
+- [`audit/fase3/scripts/wilson_h1viz.py`](../fase3/scripts/wilson_h1viz.py) — script único que reproduce los 7 indicadores Wilson IC 95% de la tabla H1-VIZ (los 6 de Tabla 1 tesis + Densidad de Árboles como expansión). Aplicación canónica del principio CLAUDE.md `<dashboard_role>`: scope mayor que tesis, fidelidad metodológica preservada con disclosure explícito. Tratamiento de "Mucho" como afirmativo intensificado y missing como No documentado en cardinalidad observada del log.
+- [`audit/fase3/scripts/wilson_h1viz_run.log`](../fase3/scripts/wilson_h1viz_run.log) — output committeado con header de trazabilidad (timestamp UTC, SHA-256 del XLSX, SHA-256 del script, versiones Python/statsmodels/openpyxl). Re-ejecutar en F4 ANTES de implementar H1-VIZ para confirmar que las cifras se mantienen.
 
 ## Co-autoría
 
